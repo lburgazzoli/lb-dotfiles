@@ -1,0 +1,1341 @@
+
+################################################################################
+# Common functions
+################################################################################
+
+function docker-rm-stopped {
+    local name=$1
+    local state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
+
+    if [[ "$state" == "false" ]]; then
+        docker rm "$name"
+    fi
+}
+
+function docker-require {
+    for container in "$@"; do
+        local state=$(docker inspect --format "{{.State.Running}}" "$container" 2>/dev/null)
+
+        if [[ "$state" == "false" ]] || [[ "$state" == "" ]]; then
+            echo "$container is not running, starting it for you."
+            $container
+        fi
+    done
+}
+
+function docker-setup-x11 {
+    XSOCK=/tmp/.X11-unix
+    XAUTH=/tmp/.docker.xauth
+
+    if [ ! -f /tmp/.docker.xauth ]; then
+        touch /tmp/.docker.xauth
+        xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f /tmp/.docker.xauth nmerge -
+    fi
+}
+
+function docker-ipof {
+    for CONTAINER in "$@"
+    do
+        local STATE=$(docker inspect --format "{{.State.Running}}" "$CONTAINER" 2>/dev/null)
+
+        if [[ "$STATE" == "true" ]]; then
+            local IP=$(docker inspect --format "{{.NetworkSettings.IPAddress}}" "$CONTAINER")
+            echo "$CONTAINER: $IP"
+        fi
+    done
+}
+
+function docker-prune {
+    docker rm $(docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null
+    docker rmi $(docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null
+}
+
+################################################################################
+# EDITOR
+################################################################################
+
+# function atom {
+#     docker-setup-x11
+
+#     local DOCKER_IMAGE="lburgazzoli/app-atom"
+#     local DOCKER_USER=${LOGNAME}
+#     local DOCKER_NAME="atom"
+#     local XSOCK=/tmp/.X11-unix
+#     local XAUTH=/tmp/.docker.xauth
+
+#     local state=$(docker inspect --format "{{.State.Running}}" ${DOCKER_NAME} 2>/dev/null)
+#     if [[ "$state" == "false" ]] || [[ "$state" == "" ]]; then
+#         docker run \
+#             --rm \
+#             --detach \
+#             --user ${DOCKER_USER} \
+#             --name ${DOCKER_NAME} \
+#             --security-opt seccomp:$HOME/.docker/seccomp/chrome.json \
+#             --volume /etc/localtime:/etc/localtime:ro \
+#             --volume /etc/machine-id:/etc/machine-id:ro \
+#             --volume /var/run/dbus:/var/run/dbus \
+#             --volume /usr/share/icons:/usr/share/icons:ro \
+#             --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#             --volume $HOME/.groovy/grapeConfig.xml:/home/${DOCKER_USER}/.groovy/grapeConfig.xml:ro \
+#             --volume $HOME/.atom:/home/${DOCKER_USER}/.atom:Z \
+#             --volume $HOME/.config/Atom:/home/${DOCKER_USER}/.config/Atom:Z \
+#             --volume $HOME/.cargo:/home/${DOCKER_USER}/.cargo:Z \
+#             --volume $HOME/.dotfiles/.bash_profile:/home/${DOCKER_USER}/.bash_profile:ro \
+#             --volume $HOME/.dotfiles/.bash_colors:/home/${DOCKER_USER}/.bash_colors:ro \
+#             --volume $HOME/.dotfiles/.bashrc:/home/${DOCKER_USER}/.bashrc:ro \
+#             --volume $HOME/.dotfiles/.bashrc.d:/home/${DOCKER_USER}/.bashrc.d:ro \
+#             --volume $HOME/.dotfiles/.gitconfig:/home/${DOCKER_USER}/.gitconfig:ro \
+#             --volume $HOME/.dotfiles/.gnupg:/home/${DOCKER_USER}/.gnupg:ro \
+#             --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#             --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#             --volume $HOME/work:/home/${DOCKER_USER}/work:Z \
+#             --volume $HOME/doc:/home/${DOCKER_USER}/doc:Z \
+#             --volume $HOME/bin:/home/${DOCKER_USER}/bin:Z \
+#             --volume /opt/sfw:/opt/sfw:ro \
+#             --volume /opt/data/cache:/opt/data/cache:Z \
+#             --volume ${XSOCK}:${XSOCK} \
+#             --env DISPLAY=unix${DISPLAY} \
+#             --env XAUTHORITY=${XAUTH} \
+#             --env GTK_THEME=${DOCKER_UI_TJEME} \
+#             --workdir $PWD \
+#             ${DOCKER_IMAGE} "$@"
+#     else
+#         docker exec \
+#             ${DOCKER_NAME} \
+#             /opt/atom/atom-run.sh \
+#             "$@" 2> /dev/null
+#     fi
+# }
+
+# function gitkraken {
+#     docker-setup-x11
+
+#     local DOCKER_IMAGE="lburgazzoli/app-gitkraken"
+#     local DOCKER_USER=${LOGNAME}
+#     local DOCKER_NAME="gitkraken"
+#     local XSOCK=/tmp/.X11-unix
+#     local XAUTH=/tmp/.docker.xauth
+
+#     docker run \
+#         --rm \
+#         --detach \
+#         --user ${DOCKER_USER} \
+#         --name ${DOCKER_NAME} \
+#         --security-opt seccomp:$HOME/.docker/seccomp/chrome.json \
+#         --volume /etc/localtime:/etc/localtime:ro \
+#         --volume /etc/machine-id:/etc/machine-id:ro \
+#         --volume /var/run/dbus:/var/run/dbus \
+#         --volume /usr/share/icons:/usr/share/icons:ro \
+#         --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#         --volume $HOME/.gitkraken:/home/${DOCKER_USER}/.gitkraken:Z \
+#         --volume $HOME/.dotfiles/.bash_profile:/home/${DOCKER_USER}/.bash_profile:ro \
+#         --volume $HOME/.dotfiles/.bash_colors:/home/${DOCKER_USER}/.bash_colors:ro \
+#         --volume $HOME/.dotfiles/.bashrc:/home/${DOCKER_USER}/.bashrc:ro \
+#         --volume $HOME/.dotfiles/.bashrc.d:/home/${DOCKER_USER}/.bashrc.d:ro \
+#         --volume $HOME/.dotfiles/.gitconfig:/home/${DOCKER_USER}/.gitconfig:ro \
+#         --volume $HOME/.dotfiles/.gnupg:/home/${DOCKER_USER}/.gnupg:ro \
+#         --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#         --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#         --volume $HOME/work:/home/${DOCKER_USER}/work:Z \
+#         --volume $HOME/doc:/home/${DOCKER_USER}/doc:Z \
+#         --volume ${XSOCK}:${XSOCK} \
+#         --env DISPLAY=unix${DISPLAY} \
+#         --env XAUTHORITY=${XAUTH} \
+#         --env GTK_THEME=${DOCKER_UI_TJEME} \
+#         --workdir $PWD \
+#         ${DOCKER_IMAGE} "$@"
+# }
+
+################################################################################
+# IM
+################################################################################
+
+#function bluejeans {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-bluejeans"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="bluejeans"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --rm \
+#        --detach \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+#        --volume $HOME/.config/google-chrome:/home/${DOCKER_USER}/.config/google-chrome:Z \
+#        --volume $HOME/.config/Blue\ Jeans:/home/${DOCKER_USER}/.config/Blue\ Jeans:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        ${DOCKER_IMAGE}
+#}
+
+function skype {
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-skype"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="skype"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+    done
+
+    docker run \
+        --rm \
+        --detach \
+        --user ${DOCKER_USER} \
+        --net host \
+        --name ${DOCKER_NAME} \
+        --group-add audio \
+        --group-add video \
+        $MULTIMEDIA_SETTINGS \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+        --volume /usr/share/icons:/usr/share/icons:ro \
+        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+        --volume $HOME/.Skype:/home/${DOCKER_USER}/.Skype:Z \
+        --volume $HOME/.config/skypeforlinux:/home/${DOCKER_USER}/.config/skypeforlinux:Z \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+        --env PULSE_LATENCY_MSEC=60 \
+        --env GTK_THEME=$DOCKER_UI_THEME \
+        ${DOCKER_IMAGE}
+}
+
+function telegram {
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-telegram"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="telegram"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+    done
+
+    docker run \
+        --rm \
+        --detach \
+        --user ${DOCKER_USER} \
+        --net host \
+        --name ${DOCKER_NAME} \
+        --group-add audio \
+        --group-add video \
+        $MULTIMEDIA_SETTINGS \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+        --volume /usr/share/icons:/usr/share/icons:ro \
+        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+        --volume $HOME/.config/Trolltech.conf:/home/${DOCKER_USER}/.config/Trolltech.conf:ro \
+        --volume $HOME/.TelegramDesktop:/home/${DOCKER_USER}/.TelegramDesktop:Z \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+        --env PULSE_LATENCY_MSEC=60 \
+        --env GTK_THEME=$DOCKER_UI_THEME \
+        ${DOCKER_IMAGE}
+}
+
+#function discord {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-discord"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="discord"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --rm \
+#        --detach \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki:Z \
+#        --volume $HOME/.config/discord:/home/${DOCKER_USER}/.config/discord:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        ${DOCKER_IMAGE} \
+#            /opt/discord/Discord
+#}
+
+#function scudcloud {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-scudcloud"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="scudcloud"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --rm \
+#        --detach \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+#        --volume $HOME/.config/Trolltech.conf:/home/${DOCKER_USER}/.config/Trolltech.conf:ro \
+#        --volume $HOME/.config/scudcloud:/home/${DOCKER_USER}/.config/scudcloud:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        ${DOCKER_IMAGE}
+#}
+
+#function wavebox {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-wavebox"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="wavebox"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --rm \
+#        --detach \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.cache:/home/${DOCKER_USER}/.cache:Z \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki:Z \
+#        --volume $HOME/.config/wavebox:/home/${DOCKER_USER}/.config/wavebox:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        ${DOCKER_IMAGE}
+#}
+
+#function franz {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-franz"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="franz"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --rm \
+#        -ti \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.cache:/home/${DOCKER_USER}/.cache:Z \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki:Z \
+#        --volume $HOME/.config/Franz:/home/${DOCKER_USER}/.config/Franz:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        --entrypoint bash \
+#        ${DOCKER_IMAGE}
+#}
+
+#function yakyak {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-yakyak"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="yakyak"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --rm \
+#        --detach \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.cache:/home/${DOCKER_USER}/.cache:Z \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki:Z \
+#        --volume $HOME/.config/yakyak:/home/${DOCKER_USER}/.config/yakyak:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        ${DOCKER_IMAGE}
+#}
+
+
+function bitlbee {
+    local DOCKER_IMAGE="lburgazzoli/app-bitlbee"
+    local DOCKER_NAME="bitlbee"
+    local DOCKER_USER=${LOGNAME}
+
+    docker network ls | grep bitlbee 2>&1 > /dev/null
+    if [ $? -ne 0 ]; then
+        docker network create bitlbee
+    fi
+
+    docker run \
+        --rm \
+        --detach \
+        --user root \
+        --net bitlbee \
+        --name ${DOCKER_NAME} \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume $HOME/.config/bitlbee:/home/${DOCKER_USER}/.config/bitlbee:Z \
+        ${DOCKER_IMAGE} \
+            bitlbee -F -n -v -u ${DOCKER_USER} -d /home/${DOCKER_USER}/.config/bitlbee
+}
+
+#function weechat {
+#    docker-require bitlbee
+#
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-weechat"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="weechat"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    docker run \
+#        -ti \
+#        --rm \
+#        --user ${DOCKER_USER} \
+#        --net bitlbee \
+#        --name ${DOCKER_NAME} \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.x11-unix:/tmp/.x11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u):/run/user/$(id -u) \
+#        --volume $HOME/.weechat:/home/${DOCKER_USER}/.weechat:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        --env DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus" \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env TERM=$TERM \
+#        ${DOCKER_IMAGE} \
+#            weechat-curses
+#}
+
+################################################################################
+# Internet
+################################################################################
+
+function chromiumd {
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-chromium"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="chromium"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+    done
+
+    if [ "$PWD" != "$HOME/dwl" ] && [ "$PWD" != "$HOME/tmp" ] && [ "$PWD" != "$HOME/wrk" ]; then
+        ADDITIONAL_VOLUMES="--volume $PWD:$PWD"
+    fi
+
+    local state=$(docker inspect --format "{{.State.Running}}" ${DOCKER_NAME} 2>/dev/null)
+    if [[ "$state" == "false" ]] || [[ "$state" == "" ]]; then
+        docker run \
+            --rm \
+            --detach \
+            --user ${DOCKER_USER} \
+            --net host \
+            --name ${DOCKER_NAME} \
+            --security-opt seccomp:$HOME/.docker/seccomp/chrome.json \
+            --security-opt label:disable \
+            --group-add audio \
+            --group-add video \
+            $MULTIMEDIA_SETTINGS \
+            --volume /etc/localtime:/etc/localtime:ro \
+            --volume /etc/machine-id:/etc/machine-id:ro \
+            --volume /tmp/.X11-unix:/tmp/.X11-unix \
+            --volume /var/run/dbus:/var/run/dbus \
+            --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+            --volume /usr/share/icons:/usr/share/icons:ro \
+            --volume /usr/share/themes:/usr/share/themes:ro \
+            --volume /usr/share/fonts:/usr/share/fonts:ro \
+            --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+            --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+            --volume $HOME/.local/share/recently-used.xbel:/home/${DOCKER_USER}/.local/share/recently-used.xbel:Z \
+            --volume $HOME/.config/chromium:/home/${DOCKER_USER}/.config/chromium:Z \
+            --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+            --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+            --volume $HOME/work:/home/${DOCKER_USER}/work:ro \
+            ${ADDITIONAL_VOLUMES} \
+            --env DISPLAY=unix${DISPLAY} \
+            --env XAUTHORITY=${XAUTH} \
+            --env PULSE_SERVER=unix:/tmp/pulse/socket \
+            --env PULSE_LATENCY_MSEC=60 \
+            --env GTK_THEME=$DOCKER_UI_THEME \
+            --workdir $PWD \
+            ${DOCKER_IMAGE} \
+                chromium-freeworld \
+                    --user-data-dir=/home/${DOCKER_USER}/.config/chromium \
+                    "$@"
+    else
+        docker exec ${DOCKER_NAME} \
+            chromium-freeworld \
+                --user-data-dir=/home/${DOCKER_USER}/.config/chromium \
+                "$@"
+    fi
+}
+
+
+#function riot {
+#    docker-setup-x11
+#
+#    local DOCKER_IMAGE="lburgazzoli/app-riot"
+#    local DOCKER_USER=${LOGNAME}
+#    local DOCKER_NAME="riot"
+#    local XSOCK=/tmp/.X11-unix
+#    local XAUTH=/tmp/.docker.xauth
+#
+#    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+#        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+#    done
+#
+#    docker run \
+#        --cpus="0.5" \
+#        --rm \
+#        --detach \
+#        --user ${DOCKER_USER} \
+#        --net host \
+#        --name ${DOCKER_NAME} \
+#        --group-add audio \
+#        --group-add video \
+#        $MULTIMEDIA_SETTINGS \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume /etc/machine-id:/etc/machine-id:ro \
+#        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+#        --volume /var/run/dbus:/var/run/dbus \
+#        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+#        --volume /usr/share/icons:/usr/share/icons:ro \
+#        --volume /usr/share/themes:/usr/share/themes:ro \
+#        --volume /usr/share/fonts:/usr/share/fonts:ro \
+#        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+#        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+#        --volume $HOME/.config/Riot:/home/${DOCKER_USER}/.config/Riot:Z \
+#        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+#        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+#        ${ADDITIONAL_VOLUMES} \
+#        --env DISPLAY=unix${DISPLAY} \
+#        --env XAUTHORITY=${XAUTH} \
+#        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+#        --env PULSE_LATENCY_MSEC=60 \
+#        --env GTK_THEME=$DOCKER_UI_THEME \
+#        ${DOCKER_IMAGE}
+#}
+
+function chromiumd-incognito {
+    docker-require tor-proxy
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-chromium"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="chromium-incognito"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    for DEVICE in $(ls --color=never -d /dev/video* /dev/snd /dev/dri); do
+        MULTIMEDIA_SETTINGS="$MULTIMEDIA_SETTINGS --device $DEVICE"
+    done
+
+    docker run \
+        --rm \
+        --detach \
+        --user ${DOCKER_USER} \
+        --network tor \
+        --security-opt seccomp:$HOME/.docker/seccomp/chrome.json \
+        --security-opt label:disable \
+        --group-add audio \
+        --group-add video \
+        $MULTIMEDIA_SETTINGS \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /run/user/$(id -u)/pulse/native:/tmp/pulse/socket \
+        --volume $HOME/.pki:/home/${DOCKER_USER}/.pki \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --volume $HOME/doc/Dropbox/settings/dotfiles/linux/icons:/home/${DOCKER_USER}/.icons:ro \
+        --volume /usr/share/icons:/usr/share/icons:ro \
+        --volume /usr/share/themes:/usr/share/themes:ro \
+        --volume /usr/share/fonts:/usr/share/fonts:ro \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        --env PULSE_SERVER=unix:/tmp/pulse/socket \
+        --env PULSE_LATENCY_MSEC=60 \
+        --env GTK_THEME=$DOCKER_UI_THEME \
+        ${DOCKER_IMAGE} \
+            chromium-freeworld \
+                --incognito \
+                --proxy-server=socks5://tor-proxy:9050
+
+}
+
+function transmission {
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-transmission"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="transmission"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    docker run \
+        --rm \
+        --detach \
+        --user ${DOCKER_USER} \
+        --net host \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /usr/share/icons:/usr/share/icons:ro \
+        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        ${DOCKER_IMAGE} \
+            transmission-gtk
+}
+
+function transmission-cli {
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-transmission"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="transmission"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    docker run \
+        -ti \
+        --rm \
+        --user ${DOCKER_USER} \
+        --net host \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /usr/share/icons:/usr/share/icons:ro \
+        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        ${DOCKER_IMAGE} \
+            transmission-cli $@
+}
+
+################################################################################
+#
+################################################################################
+
+function gitsome {
+    local DOCKER_IMAGE="lburgazzoli/app-gitsome"
+    local DOCKER_NAME="gitsome"
+    local DOCKER_OPTS="--detach"
+    local DOCKER_USER=${LOGNAME}
+
+    docker run \
+        -ti \
+        --rm \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume ${HOME}/.ssh/config:/home/${DOCKER_USER}/.ssh/config:ro \
+        --volume ${HOME}/.gnupg:/home/${DOCKER_USER}/.gnupg:ro \
+        --volume ${HOME}/.gitconfig:/home/${DOCKER_USER}/.gitconfig:ro \
+        --volume ${HOME}/.gitsomeconfig:/home/${DOCKER_USER}/.gitsomeconfig:Z \
+        --volume ${HOME}/.gitsomeconfigurl:/home/${DOCKER_USER}/.gitsomeconfigurl:Z \
+        --volume ${HOME}/work:/home/${DOCKER_USER}/work \
+        --workdir ${PWD} \
+        ${DOCKER_IMAGE}
+}
+
+function gitbc {
+    local DOCKER_IMAGE="lburgazzoli/app-gitbc"
+    local DOCKER_NAME="gitbc"
+    local DOCKER_OPTS="--detach"
+    local DOCKER_USER=${LOGNAME}
+
+    docker run \
+        -ti \
+        --rm \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume ${HOME}/.ssh/config:/home/${DOCKER_USER}/.ssh/config:ro \
+        --volume ${HOME}/.gnupg:/home/${DOCKER_USER}/.gnupg:ro \
+        --volume ${HOME}/.gitconfig:/home/${DOCKER_USER}/.gitconfig:ro \
+        --volume ${HOME}/work:/home/${DOCKER_USER}/work \
+        --workdir ${PWD} \
+        ${DOCKER_IMAGE}
+}
+
+function gitcz {
+    local DOCKER_IMAGE="lburgazzoli/app-cz-cli"
+    local DOCKER_NAME="gitcz"
+    local DOCKER_OPTS="--detach"
+    local DOCKER_USER=${LOGNAME}
+
+    docker run \
+        -ti \
+        --rm \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume ${HOME}/.ssh/config:/home/${DOCKER_USER}/.ssh/config:ro \
+        --volume ${HOME}/.gnupg:/home/${DOCKER_USER}/.gnupg:Z \
+        --volume ${HOME}/.gnupg/gpg-docker.conf:/home/${DOCKER_USER}/.gnupg/gpg.conf:ro \
+        --volume ${HOME}/.gitconfig:/home/${DOCKER_USER}/.gitconfig:ro \
+        --volume ${HOME}/work:/home/${DOCKER_USER}/work \
+        --workdir ${PWD} \
+        ${DOCKER_IMAGE} \
+        /usr/local/lib/node_modules/commitizen/bin/git-cz
+}
+
+function commitizen {
+    local DOCKER_IMAGE="lburgazzoli/app-cz-cli"
+    local DOCKER_NAME="commitizen"
+    local DOCKER_USER=${LOGNAME}
+
+    docker run \
+        -ti \
+        --rm \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume ${HOME}/.ssh/config:/home/${DOCKER_USER}/.ssh/config:ro \
+        --volume ${HOME}/.gnupg:/home/${DOCKER_USER}/.gnupg:Z \
+        --volume ${HOME}/.gnupg/gpg-docker.conf:/home/${DOCKER_USER}/.gnupg/gpg.conf:ro \
+        --volume ${HOME}/.gitconfig:/home/${DOCKER_USER}/.gitconfig:ro \
+        --volume ${HOME}/work:/home/${DOCKER_USER}/work \
+        --workdir ${PWD} \
+        ${DOCKER_IMAGE} \
+        /usr/local/lib/node_modules/commitizen/bin/commitizen
+}
+
+#function yarn {
+#    local DOCKER_IMAGE="lburgazzoli/app-yarn"
+#    local DOCKER_NAME="yarn"
+#    local DOCKER_USER=${LOGNAME}
+#
+#    docker run \
+#        -ti \
+#        --rm \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume ${HOME}/.ssh/config:/home/${DOCKER_USER}/.ssh/config:ro \
+#        --volume ${PWD}:${PWD}:Z \
+#        --workdir ${PWD} \
+#        ${DOCKER_IMAGE} \
+#            "$@"
+#}
+
+#function hugo {
+#    local DOCKER_IMAGE="lburgazzoli/app-hugo"
+#    local DOCKER_NAME="hugo"
+#    local DOCKER_USER=${LOGNAME}
+#
+#    docker run \
+#        -ti \
+#        --rm \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume ${PWD}:${PWD}:Z \
+#        --workdir ${PWD} \
+#        ${DOCKER_IMAGE} \
+#            "$@"
+#}
+
+#function hugo-server {
+#    local DOCKER_IMAGE="lburgazzoli/app-hugo"
+#    local DOCKER_NAME="hugo-server"
+#    local DOCKER_USER=${LOGNAME}
+#
+#    docker run \
+#        -ti \
+#        --rm \
+#        --name ${DOCKER_NAME} \
+#        --volume /etc/localtime:/etc/localtime:ro \
+#        --volume ${PWD}:${PWD}:Z \
+#        --workdir ${PWD} \
+#        --publish 1313:1313 \
+#        ${DOCKER_IMAGE} \
+#            serve \
+#            --bind 0.0.0.0 \
+#            --port 1313 \
+#            "$@"
+#}
+
+#function asciidoctor {
+#    local DOCKER_IMAGE="lburgazzoli/app-asciidoctor"
+#    local DOCKER_NAME="hugo"
+#    local DOCKER_USER=${LOGNAME}
+#
+#    docker run \
+#        -ti \
+#        --rm \
+#        --volume ${PWD}:${PWD}:Z \
+#        --workdir ${PWD} \
+#        ${DOCKER_IMAGE} \
+#            "$@"
+#}
+
+function squid {
+    local DOCKER_IMAGE="lburgazzoli/app-squid"
+    local DOCKER_NAME="squid"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_VOLS
+
+    if [ -f ${PWD}/squid.conf ]; then
+        DOCKER_VOLS="${DOCKER_VOLS} --volume ${PWD}/squid.conf:/etc/squid/squid.conf"
+    fi
+
+    if [ -f ${PWD}/squid-passwd ]; then
+        DOCKER_VOLS="${DOCKER_VOLS} --volume ${PWD}/squid-passwd:/etc/squid/squid-passwd"
+    fi
+
+    echo $DOCKER_VOLS
+
+    docker run \
+        -ti \
+        --rm \
+        --publish 3128:3128 \
+        ${DOCKER_VOLS} \
+        ${DOCKER_IMAGE} \
+            /usr/sbin/squid -N -d 0
+}
+
+################################################################################
+# Misc
+################################################################################
+
+function calibre {
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-calibre"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="calibre"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    docker run \
+        --rm \
+        --detach \
+        --user ${DOCKER_USER} \
+        --net host \
+        --name ${DOCKER_NAME} \
+        --group-add audio \
+        --group-add video \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.X11-unix:/tmp/.X11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /usr/share/icons:/usr/share/icons:ro \
+        --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
+        --volume $HOME/.config:/home/${DOCKER_USER}/.config/:ro \
+        --volume $HOME/.config/calibre:/home/${DOCKER_USER}/.config/calibre:Z \
+        --volume $HOME/.config/Trolltech.conf:/home/${DOCKER_USER}/.config/Trolltech.conf:ro \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --volume $HOME/doc/Dropbox/books/calibre:/home/${DOCKER_USER}/doc/calibre:Z \
+        --volume $HOME/doc/Dropbox/books:/home/${DOCKER_USER}/doc/books:Z \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        --env GTK_THEME=$DOCKER_UI_THEME \
+        --env GDK_SCALE \
+        --env GDK_DPI_SCALE \
+        --env QT_STYLE_OVERRIDE="gtk" \
+        --env QT_DEVICE_PIXEL_RATIO \
+        ${DOCKER_IMAGE}
+}
+
+################################################################################
+# Security
+################################################################################
+
+function tor-proxy {
+    local DOCKER_IMAGE="lburgazzoli/app-tor-proxy"
+    local DOCKER_NAME="tor-proxy"
+
+    docker network ls | grep tor 2>&1 > /dev/null
+    if [ $? -ne 0 ]; then
+        docker network create tor
+    fi
+
+    docker run \
+        --rm \
+        --detach \
+        --network tor \
+        --name $DOCKER_NAME \
+        ${DOCKER_IMAGE}
+}
+
+function tor-privoxy {
+    docker-require tor-proxy
+
+    local DOCKER_IMAGE="lburgazzoli/app-privoxy"
+    local DOCKER_NAME="tor-privoxy"
+
+    docker run \
+        --rm \
+        --detach \
+        --network tor \
+        --name $DOCKER_NAME \
+        --volume /etc/localtime:/etc/localtime:ro \
+        ${DOCKER_IMAGE}
+}
+
+################################################################################
+# Development
+################################################################################
+
+function groovyd {
+    local DOCKER_IMAGE="groovy:2.4-jre8-alpine"
+    local GRAPE_M2=/tmp/grape-m2
+    local GRAPE_CACHE=/tmp/grape-cache
+    local GRAPE_CONFIG=/tmp/grape-config.xml
+
+    docker run \
+        -ti \
+        --rm \
+        --volume ${PWD}:/scripts:ro \
+        --volume ${M2_REPO}:${GRAPE_M2}:ro \
+        --volume ${HOME}/.groovy/grapeConfigDocker.xml:${GRAPE_CONFIG}i:ro \
+        --workdir /scripts \
+        $DOCKER_IMAGE \
+            groovy \
+                -Dgrape.config=${GRAPE_CONFIG} \
+                -Dgrape.root=${GRAPE_CACHE} \
+                -Dgroovy.grape.report.downloads=true \
+                "$@"
+}
+
+function docker-compose {
+    local DOCKER_IMAGE="docker/compose:1.14.0"
+    local DOCKER_NAME="docker-compose"
+
+    if [ "$(pwd)" != '/' ]; then
+        docker run \
+            --rm \
+            -ti \
+            --name $DOCKER_NAME \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume ${PWD}:${PWD}:Z \
+            --workdir ${PWD} \
+            ${DOCKER_IMAGE}
+    fi
+}
+
+function ctop {
+    local DOCKER_IMAGE="quay.io/vektorlab/ctop:latest"
+    local DOCKER_NAME="ctop"
+
+    docker run \
+        --rm \
+        --tty=true \
+        --interactive=true \
+        --name $DOCKER_NAME \
+        --volume /var/run/docker.sock:/var/run/docker.sock \
+        ${DOCKER_IMAGE}
+}
+
+function activemq {
+    local DOCKER_IMAGE="lburgazzoli/app-activemq:5.14.3"
+    local DOCKER_NAME="activemq"
+    local DOCKER_OPTS="--detach"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --rm \
+        --name $DOCKER_NAME \
+        --publish 61616:61616 \
+        --publish 1883:1883 \
+        ${DOCKER_IMAGE}
+}
+
+function zookeeper {
+    local DOCKER_IMAGE="zookeeper:3.4"
+    local DOCKER_NAME="zookeeper"
+    local DOCKER_OPTS="--detach"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --rm \
+        --name $DOCKER_NAME \
+        --publish 2181:2181 \
+        --publish 2888:2888 \
+        --publish 3888:3888 \
+        ${DOCKER_IMAGE}
+}
+
+function consul {
+    local DOCKER_IMAGE="consul:${CONSUL_VERSION}"
+    local DOCKER_NAME="consul"
+    local DOCKER_OPTS="--detach"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --rm \
+        --name $DOCKER_NAME \
+        --env GOMAXPROCS=2 \
+        --publish 8500:8500 \
+        $DOCKER_IMAGE \
+            agent \
+                -dev \
+                -server \
+                -bootstrap \
+                -datacenter neverland \
+                -client 0.0.0.0 \
+                -log-level trace
+}
+
+################################################################################
+# Development - Etcd
+################################################################################
+
+function etcdv2 {
+    local DOCKER_IMAGE="quay.io/coreos/etcd:${ETCD2_VERSION}"
+    local DOCKER_NAME="etcdv2"
+    local DOCKER_OPTS="--detach"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --rm \
+        --name $DOCKER_NAME \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs \
+        --publish 4001:4001 \
+        --publish 2380:2380 \
+        --publish 2379:2379 \
+        $DOCKER_IMAGE \
+            -debug \
+            -name etcdv2-0 \
+            -advertise-client-urls http://${HOST_IP}:2379,http://${HOST_IP}:4001 \
+            -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
+            -initial-advertise-peer-urls http://${HOST_IP}:2380 \
+            -listen-peer-urls http://0.0.0.0:2380 \
+            -initial-cluster-token etcd-v2-cluster \
+            -initial-cluster etcdv2-0=http://${HOST_IP}:2380 \
+            -initial-cluster-state new
+}
+
+function etcdv3 {
+    local DOCKER_IMAGE="gcr.io/etcd-development/etcd:${ETCD3_VERSION}"
+    local DOCKER_NAME="etcdv3"
+    local DOCKER_OPTS="--detach"
+    local HOST_IP="127.0.0.1"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --net host \
+        --rm \
+        --name $DOCKER_NAME \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs \
+        --publish 4001:4001 \
+        --publish 2380:2380 \
+        --publish 2379:2379 \
+        $DOCKER_IMAGE \
+            etcd \
+                -debug \
+                -name etcdv3 \
+                -advertise-client-urls http://${HOST_IP}:2379,http://${HOST_IP}:4001 \
+                -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
+                -initial-advertise-peer-urls http://${HOST_IP}:2380
+}
+
+function etcdv3-cluster {
+    local DOCKER_IMAGE="gcr.io/etcd-development/etcd:${ETCD3_VERSION}"
+    local DOCKER_NETWORK="etcd"
+
+    docker network ls | grep ${DOCKER_NETWORK} 2>&1 > /dev/null
+    if [ $? -ne 0 ]; then
+        docker network create ${DOCKER_NETWORK}
+    fi
+
+    docker run \
+        --rm \
+        --detach \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs:ro \
+        --publish 12379:2379 \
+        --name etcd1 \
+        --network ${DOCKER_NETWORK} \
+        ${DOCKER_IMAGE} \
+            etcd \
+                -name etcd1 \
+                -advertise-client-urls http://localhost:4000,http://etcd1:2379 \
+                -listen-client-urls http://0.0.0.0:2379 \
+                -initial-advertise-peer-urls http://etcd1:2380 \
+                -listen-peer-urls http://0.0.0.0:2380 \
+                -initial-cluster-token etcd-cluster \
+                -initial-cluster etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380 \
+                -initial-cluster-state new
+
+    docker run \
+        --rm \
+        --detach \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs:ro \
+        --publish 22379:2379 \
+        --name etcd2 \
+        --network ${DOCKER_NETWORK} \
+        ${DOCKER_IMAGE} \
+            etcd \
+                -name etcd2 \
+                -advertise-client-urls http://localhost:4001,http://etcd2:2379 \
+                -listen-client-urls http://0.0.0.0:2379 \
+                -initial-advertise-peer-urls http://etcd2:2380 \
+                -listen-peer-urls http://0.0.0.0:2380 \
+                -initial-cluster-token etcd-cluster \
+                -initial-cluster etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380 \
+                -initial-cluster-state new
+
+    docker run \
+        --rm \
+        --detach \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs:ro \
+        --publish 32379:2379 \
+        --name etcd3 \
+        --network ${DOCKER_NETWORK} \
+        ${DOCKER_IMAGE} \
+            etcd \
+                -name etcd3 \
+                -advertise-client-urls http://localhost:4002,http://etcd3:2379 \
+                -listen-client-urls http://0.0.0.0:2379 \
+                -initial-advertise-peer-urls http://etcd3:2380 \
+                -listen-peer-urls http://0.0.0.0:2380 \
+                -initial-cluster-token etcd-cluster \
+                -initial-cluster etcd1=http://etcd1:2380,etcd2=http://etcd2:2380,etcd3=http://etcd3:2380 \
+                -initial-cluster-state new
+
+    docker run \
+        --rm \
+        --detach \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs:ro \
+        --publish 2379:2379 \
+        --name etcd-proxy \
+        --network ${DOCKER_NETWORK} \
+        ${DOCKER_IMAGE} \
+            etcd \
+                grpc-proxy \
+                start \
+                --endpoints=etcd1:2379,etcd2:2379,etcd3:2379 \
+                --listen-addr=0.0.0.0:2379
+}
+
+function etcdctlv3-cluster {
+    local DOCKER_IMAGE="gcr.io/etcd-development/etcd:${ETCD3_VERSION}"
+    local DOCKER_NETWORK="etcd"
+
+    docker network ls | grep ${DOCKER_NETWORK} 2>&1 > /dev/null
+    if [ $? -ne 0 ]; then
+        docker network create ${DOCKER_NETWORK}
+    fi
+
+    docker run \
+        --rm \
+        --tty=true \
+        --interactive=true \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs:ro \
+        --env ETCDCTL_API=3 \
+        --network ${DOCKER_NETWORK} \
+        ${DOCKER_IMAGE} \
+            etcdctl \
+                --endpoints=etcd0:2379,etcd1:2379,etcd2:2379 \
+                "$@"
+}

@@ -1,0 +1,18 @@
+_minikube_complete() 
+{
+    local cur_word prev_word type_list
+
+    cur_word="${COMP_WORDS[COMP_CWORD]}"
+    prev_word="${COMP_WORDS[COMP_CWORD-1]}"
+    type_list=""
+
+    if [ "$prev_word" = "minikube" ]; then
+        type_list="dashboard delete docker-env get-k8s-version ip logs service ssh start status stop version"
+    fi
+
+    COMPREPLY=( $(compgen -W "${type_list}" -- ${cur_word}) )
+
+    return 0
+}
+
+complete -F _minikube_complete minikube

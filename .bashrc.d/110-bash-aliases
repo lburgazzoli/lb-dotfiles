@@ -1,0 +1,93 @@
+# Easier navigation
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ~="cd ~" # `cd` is probably faster to type though
+alias -- -="cd -"
+
+# Shortcuts
+alias dl="cd ~/dwl"
+alias g="git"
+#alias h="history"
+
+# Detect which `ls` flavor is in use
+if ls --color > /dev/null 2>&1; then # GNU `ls`
+    colorflag="--color"
+else # OS X `ls`
+    colorflag="-G"
+fi
+
+alias ls='ls ${colorflag}'
+alias lsd="ls -lF ${colorflag} | grep --color=never '^d'"
+alias la="ls -laF ${colorflag}"
+alias ll='ls -l'
+
+#
+# Maven
+#
+alias m2build='mvn clean compile'
+alias m2inst='mvn clean install -Dmaven.javadoc.skip=true -DskipTests'
+alias m2fastinst='mvn clean install -Dmaven.javadoc.skip=true -Dmaven.test.skip=true'
+alias m2clean='mvn clean'
+alias m2test='mvn test'
+alias m2wrap='mvn -N io.takari:maven:wrapper'
+alias m2deps='mvn dependency:tree'
+alias m2deps-updates='mvn versions:display-dependency-updates'
+alias m2plug-updates='mvn versions:display-plugin-updates'
+
+#
+# Shortcuts
+#
+alias chron='cd $LB_WORK_HOME/chronicle'
+alias red='cd $LB_WORK_HOME/redhat'
+alias fuse='cd $LB_WORK_HOME/redhat/fuse'
+alias lb='cd $LB_WORK_HOME/lb'
+alias ors='cd $LB_WORK_HOME/lb/dev/lb-openors'
+alias camel='cd $LB_WORK_HOME/apache/dev/camel'
+alias karaf='cd $LB_WORK_HOME/apache/dev/karaf'
+alias apache='cd $LB_WORK_HOME/apache'
+alias sm-bundles='cd $LB_WORK_HOME/redhat/dev/apache-servicemix-bundles'
+alias sm-specs='cd $LB_WORK_HOME/redhat/dev/apache-servicemix-specs'
+
+#
+# Gradle
+#
+alias gw='./gradlew'
+alias gver='./gradlew dependencyUpdates -Drevision=release'
+
+#
+# Tools
+#
+alias idea='$HOME/bin/start-jetbrains-idea.sh'
+alias clion='$HOME/bin/start-jetbrains-clion.sh'
+alias pycharm='$HOME/bin/start-jetbrains-pycharm.sh'
+
+
+if [ -e /opt/sfw/tools/sublime_text/sublime_text ]; then
+    alias st='/opt/sfw/tools/sublime_text/sublime_text'
+else
+    alias st='subl'
+fi
+
+#
+# GIT
+#
+if [ -e /opt/sfw/tools/hub/bin/hub ]; then
+    alias git='hub'
+elif [ -e /usr/local/bin/hub ]; then
+    alias git='hub'
+fi
+
+#
+# OS
+#
+if [ -f /etc/fedora-release ]; then
+    alias tjd='journalctl _PID=$(pidof docker) -f'
+    alias dnf-up='sudo dnf clean all && sudo dnf update --refresh'
+fi
+
+#alias dropboxctl="docker exec -it dropbox bin/dropbox.py"
+
+alias jmx4perl="docker run --rm -it --net=host -v ~/.j4p:/root/.j4p jolokia/jmx4perl jmx4perl"
+alias j4psh="docker run --rm -it --net=host -v ~/.j4p:/root/.j4p jolokia/jmx4perl j4psh"

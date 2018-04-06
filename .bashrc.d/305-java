@@ -1,0 +1,38 @@
+
+export JAVA_ROOT=${LB_SFW_LANG_HOME}/java
+export JAVA_VERSION_MAJOR=8
+export JAVA_VERSION="${JAVA_VERSION_MAJOR}"
+export JAVA_HOME_8=${LB_SFW_LANG_HOME}/java/8
+export JAVA_HOME_9=${LB_SFW_LANG_HOME}/java/9
+export JAVA_HOME=${JAVA_ROOT}/${JAVA_VERSION}
+
+if [ -d ${JAVA_HOME} ]; then
+    pathadd ${JAVA_HOME}/bin
+fi
+
+if [ ! -e /tmp/java-${LOGNAME} ]; then
+    mkdir /tmp/java-${LOGNAME}
+fi
+
+export IDEA_JDK=$JAVA_HOME
+
+####################################################################
+# Maven
+####################################################################
+
+export M2_OPTS=$MAVEN_OPTS
+export M2_REPO=${LB_DATA_CACHE_HOME}/maven-repo
+
+####################################################################
+# JAVA_OPTS
+####################################################################
+
+GRAPE_OPTS="-Dgrape.root=${LB_DATA_CACHE_HOME}/groovy-grape-repo -Dgrape.config=${HOME}/.groovy/grapeConfig.xml"
+JAVA_OPTS="${GRAPE_OPTS}"
+
+if [ -c /dev/urandom ]; then
+    JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom"
+fi
+
+export JAVA_OPTS
+

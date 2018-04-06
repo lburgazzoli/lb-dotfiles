@@ -1,0 +1,13 @@
+
+ORACLE_VERSION=12.1
+ORACLE_HOME=${LB_SFW_HOME}/tools/oracle/instantclient/${ORACLE_VERSION}
+
+if [ -d ${ORACLE_HOME} ]; then
+    
+    export ORACLE_VERSION
+    export ORACLE_HOME
+
+    pathadd ${ORACLE_HOME}
+    ldpathadd ${ORACLE_HOME}
+fi
+

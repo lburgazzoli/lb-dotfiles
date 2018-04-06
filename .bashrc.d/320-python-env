@@ -1,0 +1,7 @@
+
+VIRTUAL_ENV_DISABLE_PROMPT=1
+VIRTUAL_ENV_NAME=env-py-3.6
+
+if [ -f ${LB_SFW_LANG_HOME}/python/${VIRTUAL_ENV_NAME}/bin/activate ]; then
+    source ${LB_SFW_LANG_HOME}/python/${VIRTUAL_ENV_NAME}/bin/activate
+fi

@@ -1,0 +1,40 @@
+
+export RUST_ROOT=${LB_SFW_LANG_HOME}/rust
+export CARGO_HOME=${RUST_ROOT}/cargo
+export RUSTUP_HOME=${RUST_ROOT}/rustup
+
+if [ -d ${CARGO_HOME}/bin ]; then
+    pathadd ${CARGO_HOME}/bin
+
+    export RUST_SYS_PATH=$(rustc --print sysroot)
+    export RUST_SRC_PATH="${RUST_SYS_PATH}/lib/rustlib/src/rust/src"
+
+    if [ -f ${RUST_SYS_PATH}/etc/bash_completion.d/cargo ]; then
+        source ${RUST_SYS_PATH}/etc/bash_completion.d/cargo
+    fi
+
+    function cargo-install-base {
+        cargo install fd-find
+        cargo install ripgrep
+        cargo install cargo-update
+    }
+fi
+
+if [ -f ${CARGO_HOME}/bin/rustup ]; then
+    if [ ${LB_OS_NAME} != "darwin" ]; then
+        source <(${CARGO_HOME}/bin/rustup completions bash)
+    fi
+fi
+
+if [ -f ${CARGO_HOME}/bin/cargo-install-update ]; then
+    function cargo-update {
+        cargo install-update --all --git
+    }
+    function cargo-installed {
+        cargo install-update --all --list
+    }
+fi
+
+if hash rg 2>/dev/null; then
+    export RIPGREP_CONFIG_PATH=~/.ripgreprc
+fi

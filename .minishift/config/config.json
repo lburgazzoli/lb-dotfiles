@@ -1,0 +1,14 @@
+{
+    "cpus": 2,
+    "disk-size": "40g",
+    "insecure-registry": [
+        "172.30.0.0/16",
+        "registry.access.redhat.com",
+        "docker-registry.usersys.redhat.com",
+        "ce-registry.usersys.redhat.com"
+    ],
+    "memory": "4g",
+    "openshift-version": "v3.7.1",
+    "show-libmachine-logs": true,
+    "vm-driver": "kvm"
+}

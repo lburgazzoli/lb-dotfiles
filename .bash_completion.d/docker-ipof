@@ -1,0 +1,20 @@
+_docker_ipof_complete() 
+{
+    local cur_word prev_word type_list
+
+    cur_word="${COMP_WORDS[COMP_CWORD]}"
+    prev_word="${COMP_WORDS[COMP_CWORD-1]}"
+    type_list=""
+
+    case $prev_word in
+    docker-ipof)
+        type_list="$(docker ps --format \"{{.Names}}\")"
+        ;;
+    esac
+
+    COMPREPLY=( $(compgen -W "${type_list}" -- ${cur_word}) )
+
+    return 0
+}
+
+complete -F _docker_ipof_complete docker-ipof

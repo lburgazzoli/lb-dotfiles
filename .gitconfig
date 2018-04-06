@@ -1,0 +1,118 @@
+[include]
+    path = ~/.gitconfig.local
+[push]
+    default = simple
+[core]
+    autocrlf = input
+    editor = vim
+    pager = diff-so-fancy | less --tabs=4 -RFX
+[color]
+    ui = auto
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold # line info
+    old = red # deletions
+    new = green # additions
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+[credential]
+    helper = cache --timeout=3600
+[diff]
+    compactionHeuristic = 1
+[hub]
+    protocol = ssh    
+[alias]
+    list-gone = !git pull --prune 2>&1 > /dev/null && git branch -vv | grep gone
+    list-merged-branches = "!f() { git branch --merged ${1-master} | grep -v \" ${1-master}$\"; }; f"
+    list-files = !git show --pretty="format:" --name-status
+    list-deleted = !git show --pretty="format:" --name-status --diff-filter=D
+    list-mine = !"git log --author=$(git config user.name) --pretty=format:'%C(green)%h%x09%C(cyan)%ad%x09%C(reset)%s' --date=format:'%Y-%m-%d %H:%M:%S'"
+    last = log --date=relative --name-status -1
+
+    ls = "!f() { git log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative --name-status ${1-HEAD}; }; f"
+    lt = "!f() { git log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative ${1-HEAD}; }; f"
+    lc = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=short ${1-HEAD}; }; f"
+    lcd = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=short ${1-origin}..${2-HEAD}; }; f"
+    lcr = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %<(16)%Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=relative ${1-HEAD}; }; f"
+    
+    diff-origin = "!f() { git diff --stat --color origin/${1-master}; }; f"
+    diff-upstream = "!f() { git diff --stat --color upstream/${1-master}; }; f"
+    diff-github = !git diff --stat --color github/master
+    diverged = "!f() { git merge-base ${1-master} HEAD; }; f"
+    rebase-diverged = "!f() { git rebase -i $(git merge-base ${1-master} HEAD); }; f"
+    rebase-upstream = "!f() { git fetch --all && git pull && git rebase upstream/${1-master}; }; f"
+    head-set-origin = !git remote set-head origin -a
+    cm = !git add -A && git commit -m
+    undo = reset HEAD~1 --mixed
+    amend = commit -a --amend
+    fat = fetch --all --tags
+
+    current-branch = !git rev-parse --abbrev-ref HEAD
+    tracking-branch = "!f() { git for-each-ref --format=\"%(color:yellow)%(refname:short)%(color:reset) <--> %(color:blue)%(${1-upstream}:short)%(color:reset)\" $(git symbolic-ref -q HEAD); }; f"
+
+    # Show the diff between the latest commit and the current state
+    d = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
+
+    # `git di $number` shows the diff between the state `$number` revisions ago and the current state
+    di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+
+    # Switch to a branch
+    cd = checkout
+
+    # Switch to a branch, creating it if necessary
+    go = checkout -B
+
+    # Show verbose output about tags, branches or remotes
+    tags = tag -l
+    branches = branch -a
+    remotes = remote -v
+
+    # Amend the currently staged files to the latest commit
+    amend = commit --amend --reuse-message=HEAD
+
+    # Interactive rebase with the given number of latest commits
+    reb = "!r() { git rebase -i HEAD~$1; }; r"
+
+    # Find branches containing commit
+    fb = "!f() { git branch -a --contains $1; }; f"
+
+    # Find tags containing commit
+    ft = "!f() { git describe --always --contains $1; }; f"
+
+    # Find commits by source code
+    fc = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short -S$1; }; f"
+
+    # Find commits by commit message
+    fm = "!f() { git log --pretty=format:'%C(yellow)%h  %Cblue%ad  %Creset%s%Cgreen  [%cn] %Cred%d' --decorate --date=short --grep=$1; }; f"
+
+    # Remove branches that have already been merged with master
+    # a.k.a. ‘delete merged’
+    dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+    al=!git config -l | grep ^alias | cut -c 7- | sort
+
+    # checkout a PR to a new branch
+    checkout-pr = !"pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr"
+    bd = "!f() { git for-each-ref --sort=committerdate refs/heads/ --format='%(refname:short):%(committerdate:relative)'; }; f | column -t -s ':'"
+    patch = !git --no-pager diff --no-color
+
+[commit]
+    gpgsign = true
+[gpg]
+    program = gpg2
+[filter "lfs"]
+    required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process

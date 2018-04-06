@@ -1,0 +1,14 @@
+
+for F in $(ls $HOME/.bash_completion.d); 
+do
+    if [ ${LB_OS_NAME} != "darwin" ]; then
+        . $HOME/.bash_completion.d/$F
+    else 
+        if hash brew 2> /dev/null; then
+            if [ ! -e "$(brew --prefix)"/etc/bash_completion.d/$F ]; then
+                . $HOME/.bash_completion.d/$F
+            fi
+        fi
+    fi
+done
+

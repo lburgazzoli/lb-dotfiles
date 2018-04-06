@@ -1,0 +1,7 @@
+export HUB_HOME=/opt/sfw/tools/hub
+
+if [ -d $HUB_HOME ]; then
+    pathadd $HUB_HOME/bin
+    manpathadd $HUB_HOME/share/man
+fi
+

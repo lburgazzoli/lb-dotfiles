@@ -1,0 +1,22 @@
+
+if [ ${LB_OS_NAME} == "darwin" ]; then
+    export GOROOT=/usr/local/opt/go/libexec
+    export GOBIN=$GOPATH/bin
+    export GOPATH=${LB_SFW_LANG_HOME}/go/path
+
+    pathadd ${GOPATH}/bin
+    pathadd ${GOROOT}/bin
+else
+    export GO_VERSION=1.10
+    export GO_BASE=${LB_SFW_LANG_HOME}/go
+    export GO_HOME=${GO_BASE}/${GO_VERSION}
+
+    if [ -d ${GO_HOME} ]; then
+        export GOROOT=${GO_HOME}
+        export GOPATH=${HOME}/work/lb/dev/go
+
+        pathadd ${GOROOT}/bin
+        pathadd ${GOPATH}/bin
+    fi
+fi
+

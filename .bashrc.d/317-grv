@@ -1,0 +1,6 @@
+export GRV_HOME=/opt/sfw/tools/grv
+
+if [ -d $GRV_HOME ]; then
+    pathadd $GRV_HOME
+fi
+

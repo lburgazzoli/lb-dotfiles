@@ -1,0 +1,10 @@
+if [ -d ~/.linuxbrew ]; then
+    pathadd ~/.linuxbrew/bin
+    manpathadd ~/.linuxbrew/share/man
+    infopathadd ~/.linuxbrew/share/info
+fi
+
+if hash brew 2> /dev/null; then
+    source $(brew --prefix)/etc/bash_completion.d/brew
+fi
+

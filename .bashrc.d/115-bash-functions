@@ -1,0 +1,247 @@
+## cannot use an alias to inject the command line params
+mci() {
+    mvn clean install "$@" | h -i error success
+}
+
+### cannot use an alias to inject the command line params
+mcis() {
+    mvn clean install -DskipTests -Dmaven.javadoc.skip=true "$@" | h -i "error\|failure" success
+}
+
+# Color man pages
+man() {
+    env \
+        GROFF_NO_SGR=1 \
+        LESS_TERMCAP_mb=$(printf "\e[1;31m") \
+        LESS_TERMCAP_md=$(printf "\e[1;31m") \
+        LESS_TERMCAP_me=$(printf "\e[0m") \
+        LESS_TERMCAP_se=$(printf "\e[0m") \
+        LESS_TERMCAP_so=$(printf "\e[1;44;33m") \
+        LESS_TERMCAP_ue=$(printf "\e[0m") \
+        LESS_TERMCAP_us=$(printf "\e[1;32m") \
+        man "$@"
+}
+
+#Colorize less search
+less() {
+    env \
+        LESS_TERMCAP_so=$(printf "\e[1;31m") \
+        LESS_TERMCAP_se=$(printf "\e[0m") \
+        less -R "$@"
+}
+
+
+################################################################################
+# Get software
+################################################################################
+
+function get-minikube {
+    REPO_OWNER="kubernetes"
+    REPO_NAME="minikube"
+    BINARY_NAME="minikube-linux-amd64"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/minikube/bin"
+
+    if [ $# -eq 1 ]; then
+        URL= "https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl \
+        --location \
+        --silent \
+        --output ${BINARY_PATH}/minikube \
+        $URL
+
+    chmod u+x ${BINARY_PATH}/minikube
+}
+
+function get-minishift {
+    REPO_OWNER="minishift"
+    REPO_NAME="minishift"
+    BINARY_NAME="linux-amd64.tgz"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/minishift/bin"
+
+    if [ $# -eq 1 ]; then
+        VER=${1}
+        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/minishift-${VER}-${BINARY_NAME}"
+    else
+        VER=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \ ".name" \
+            | sed 's/^v\(.*\)$/\1/')
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvz \
+            --directory ${BINARY_PATH} \
+            --strip-components=1 \
+            minishift-${VER}-linux-amd64/minishift
+
+    chmod u+x ${BINARY_PATH}/minishift
+}
+
+function get-hub {
+    REPO_OWNER="github"
+    REPO_NAME="hub"
+    BINARY_NAME="hub-linux-amd64"
+    BINARY_PATH="/opt/sfw/tools/hub"
+    BINARY_TYPE="tgz"
+
+    if [ $# -eq 1 ]; then
+        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            --strip-components=1
+}
+
+function get-go {
+    if [ -d ${GO_BASE}/${GO_VERSION} ]; then
+        rm -rf ${GO_BASE}/${GO_VERSION}
+    fi
+
+    if [ ! -d ${GO_BASE}/${GO_VERSION} ]; then
+        mkdir -p ${GO_BASE}/${GO_VERSION}
+    fi
+
+    curl https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz\
+        | tar -xzf - \
+            --directory ${GO_BASE}/${GO_VERSION} \
+            --strip-components=1
+}
+
+function get-rust {
+    if [ ! -d $RUST_HOME ]; then
+        mkdir -p $RUST_HOME
+    fi
+
+    if [ ! -d $RUST_SRC_HOME ]; then
+        mkdir -p $RUST_SRC_HOME
+    fi
+
+    curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- \
+        --disable-sudo \
+        --disable-ldconfig \
+        --revision=$RUST_VERSION \
+        --prefix=$RUST_HOME
+
+    curl https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.gz \
+        | tar -xzf - \
+            --directory ${RUST_SRC_HOME} \
+            --strip-components=1
+}
+
+function get-hugo {
+    REPO_OWNER="gohugoio"
+    REPO_NAME="hugo"
+    BINARY_NAME="Linux-64bit.tar.gz"
+    BINARY_PATH="/opt/sfw/tools/hugo"
+    BINARY_TYPE="tar.gz"
+
+    if [ $# -eq 1 ]; then
+        URL= "https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH}
+}
+
+function get-stern {
+    REPO_OWNER="wercker"
+    REPO_NAME="stern"
+    BINARY_NAME="stern_linux_amd64"
+    BINARY_PATH="/opt/sfw/tools/stern"
+
+    if [ $# -eq 1 ]; then
+        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL -o ${BINARY_PATH}/stern
+    chmod u+x ${BINARY_PATH}/stern
+}
+
+
+function get-grv {
+    REPO_OWNER="rgburke"
+    REPO_NAME="grv"
+    BINARY_NAME="linux64"
+    BINARY_PATH="/opt/sfw/tools/grv"
+
+    if [ $# -eq 1 ]; then
+        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/grv_v${1}_${BINARY_NAME}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL -o ${BINARY_PATH}/${REPO_NAME}
+}

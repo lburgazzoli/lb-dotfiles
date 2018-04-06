@@ -1,0 +1,115 @@
+
+################################################################################
+#
+# OPENSHIFT
+#
+################################################################################
+
+
+if [ -d ${LB_SFW_TOOLS_HOME}/minishift/bin ]; then
+    pathadd ${LB_SFW_TOOLS_HOME}/minishift/bin
+
+    if hash minishift 2>/dev/null; then
+        source <(minishift completion bash)
+    fi
+
+    if hash oc 2>/dev/null; then
+        source <(oc completion bash)
+    fi
+fi
+
+#function minishift-start {
+#    local VM_DRIVER=kvm
+#
+#    if [ ${LB_OS_NAME} == "darwin" ]; then
+#        VM_DRIVER=xhyve
+#    fi
+#
+#    minishift start \
+#        --alsologtostderr \
+#        --show-libmachine-logs \
+#        --vm-driver=$VM_DRIVER \
+#        --cpus=2 \
+#        --memory=6144 \
+#        --disk-size=40g \
+#        --insecure-registry=172.30.0.0/16 \
+#        --insecure-registry=registry.access.redhat.com \
+#        --insecure-registry=docker-registry.usersys.redhat.com \
+#        --insecure-registry=ce-registry.usersys.redhat.com
+#}
+
+function minishift-env {
+    MINISHIFT_IP="$(minishift ip)"
+    export KUBERNETES_DOMAIN="${MINISHIFT_IP}.nip.io"
+    export KUBERNETES_MASTER="https://${MINISHIFT_IP}:8443"
+    export OPENSHIFT_MASTER="https://${MINISHIFT_IP}:8443"
+    eval $(minishift docker-env)
+    eval $(minishift oc-env)
+
+    if hash oc 2>/dev/null; then
+        source <(oc completion bash)
+    fi
+}
+
+function minishift-login-adm {
+    oc login \
+        --username system:admin \
+        --server "$(minishift ip):8443" \
+        --insecure-skip-tls-verify \
+        "$@"
+}
+
+function minishift-login {
+    oc login \
+        --namespace $1 \
+        --username developer \
+        --password developer \
+        --server "$(minishift ip):8443" \
+        --insecure-skip-tls-verify 
+
+    oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
+}
+
+function minishift-login-fis {
+    minishift-login fis
+}
+
+function minishift-login-camel {
+    minishift-login camel
+}
+
+function minishift-login-syndesis {
+    minishift-login syndesis
+}
+
+function minishift-drop {
+    sudo iptables -A OUTPUT -p tcp -m tcp --dport 8443 -j DROP
+}
+
+function minishift-allow {
+    sudo iptables -D OUTPUT -p tcp -m tcp --dport 8443 -j DROP
+}
+
+function oc-expose {
+    if [ "$#" -eq 1 ]; then
+        oc expose service $1 --hostname="${1}.$(minishift ip).nip.io"
+    fi
+}
+
+function oc-unexpose {
+    if [ "$#" -eq 1 ]; then
+        oc delete route $1
+    fi
+}
+
+function oc-port-forward {
+    oc port-forward $(oc get pods | awk '{ print $1 }' | grep $1) $2:$2
+}
+
+function oc-watch-pods {
+    watch -c -d -n 1 oc get pods --show-all=false
+}
+
+
+
+

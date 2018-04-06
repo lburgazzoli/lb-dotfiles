@@ -1,0 +1,6 @@
+export SDKMAN_HOME=/opt/sfw/tools/sdkman
+export SDKMAN_DIR=${SDKMAN_HOME}
+
+if [ -s ${SDKMAN_DIR}/bin/sdkman-init.sh ]; then
+    source ${SDKMAN_DIR}/bin/sdkman-init.sh
+fi
