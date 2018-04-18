@@ -56,6 +56,16 @@
         "rust.rls": {
                 "useRustfmt": true
         },
-        "gitlens.keymap": "alternate",
-        "gitlens.codeLens.enabled": false
+        "gitlens.keymap": "chorded",
+        "gitlens.codeLens.enabled": false,
+        "gitlens.advanced.messages": {
+                "suppressCommitHasNoPreviousCommitWarning": false,
+                "suppressCommitNotFoundWarning": false,
+                "suppressFileNotUnderSourceControlWarning": false,
+                "suppressGitVersionWarning": false,
+                "suppressLineUncommittedWarning": false,
+                "suppressNoRepositoryWarning": false,
+                "suppressResultsExplorerNotice": false,
+                "suppressShowKeyBindingsNotice": true
+        }
 }
