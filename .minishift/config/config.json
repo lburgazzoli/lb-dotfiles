@@ -8,7 +8,7 @@
         "ce-registry.usersys.redhat.com"
     ],
     "memory": "4g",
-    "openshift-version": "v3.7.1",
+    "openshift-version": "v3.7.2",
     "show-libmachine-logs": true,
     "vm-driver": "kvm",
     "iso-url": "centos"

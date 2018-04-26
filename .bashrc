@@ -24,7 +24,7 @@ export MANPAGER="less -X"
 export LB_OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')
 export LB_WORK_HOME=${HOME}/work
 
-export LB_SFW_HOME=/opt/sfw
+export LB_SFW_HOME=/opt/data/sfw
 export LB_SFW_LANG_HOME=${LB_SFW_HOME}/lang
 export LB_SFW_TOOLS_HOME=${LB_SFW_HOME}/tools
 export LB_DATA_HOME=/opt/data
@@ -116,3 +116,7 @@ do
 done
 
 
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/opt/data/sfw/tools/sdkman"
+[[ -s "/opt/data/sfw/tools/sdkman/bin/sdkman-init.sh" ]] && source "/opt/data/sfw/tools/sdkman/bin/sdkman-init.sh"

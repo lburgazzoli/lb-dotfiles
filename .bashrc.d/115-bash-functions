@@ -198,7 +198,7 @@ function get-stern {
     REPO_OWNER="wercker"
     REPO_NAME="stern"
     BINARY_NAME="stern_linux_amd64"
-    BINARY_PATH="/opt/sfw/tools/stern"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/stern"
 
     if [ $# -eq 1 ]; then
         URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}"
