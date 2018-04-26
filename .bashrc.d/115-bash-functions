@@ -105,7 +105,7 @@ function get-hub {
     REPO_OWNER="github"
     REPO_NAME="hub"
     BINARY_NAME="hub-linux-amd64"
-    BINARY_PATH="/opt/sfw/tools/hub"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/hub"
     BINARY_TYPE="tgz"
 
     if [ $# -eq 1 ]; then

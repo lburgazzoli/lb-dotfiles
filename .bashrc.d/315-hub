@@ -1,4 +1,4 @@
-export HUB_HOME=/opt/sfw/tools/hub
+export HUB_HOME=${LB_SFW_TOOLS_HOME}/hub
 
 if [ -d $HUB_HOME ]; then
     pathadd $HUB_HOME/bin
