@@ -1095,8 +1095,37 @@ function activemq {
         ${DOCKER_IMAGE}
 }
 
-function zookeeper {
+function zookeeper34 {
     local DOCKER_IMAGE="zookeeper:3.4"
+    local DOCKER_NAME="zookeeper"
+    local DOCKER_OPTS="--detach"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --rm \
+        --name $DOCKER_NAME \
+        --publish 2181:2181 \
+        --publish 2888:2888 \
+        --publish 3888:3888 \
+        ${DOCKER_IMAGE}
+}
+
+function zookeeper35 {
+    local DOCKER_IMAGE="zookeeper:3.5"
     local DOCKER_NAME="zookeeper"
     local DOCKER_OPTS="--detach"
 
