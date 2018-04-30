@@ -960,13 +960,11 @@ function calibre {
         --volume /var/run/dbus:/var/run/dbus \
         --volume /usr/share/icons:/usr/share/icons:ro \
         --volume $HOME/.icons:/home/${DOCKER_USER}/.icons:ro \
-        --volume $HOME/.config:/home/${DOCKER_USER}/.config/:ro \
         --volume $HOME/.config/calibre:/home/${DOCKER_USER}/.config/calibre:Z \
         --volume $HOME/.config/Trolltech.conf:/home/${DOCKER_USER}/.config/Trolltech.conf:ro \
         --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
         --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
-        --volume $HOME/doc/Dropbox/books/calibre:/home/${DOCKER_USER}/doc/calibre:Z \
-        --volume $HOME/doc/Dropbox/books:/home/${DOCKER_USER}/doc/books:Z \
+        --volume $HOME/doc/calibre:/home/${DOCKER_USER}/doc/calibre:Z \
         --env DISPLAY=unix${DISPLAY} \
         --env XAUTHORITY=${XAUTH} \
         --env GTK_THEME=$DOCKER_UI_THEME \
