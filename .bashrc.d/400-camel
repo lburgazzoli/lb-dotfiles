@@ -5,20 +5,9 @@
 
 function camel-mvn {
     MAVEN_OPTS=""
-
-    if [ $JAVA_VERSION != "9" ]; then
-        if [ $JAVA_VERSION != "8" ]; then
-            MAVEN_OPTS="-XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=512m"
-        fi
-
-        MAVEN_MEM="3072"
-        MAVEN_OPTS="${MAVEN_OPTS} -XX:+UseConcMarkSweepGC -Xms${MAVEN_MEM}m -Xmx${MAVEN_MEM}m"
-        M2_OPTS=${MAVEN_OPTS}
-    else
-        MAVEN_MEM="3072"
-        MAVEN_OPTS="${MAVEN_OPTS} -ms${MAVEN_MEM}m -mx${MAVEN_MEM}m"
-        M2_OPTS=${MAVEN_OPTS}
-    fi
+    MAVEN_MEM="3072"
+    MAVEN_OPTS="${MAVEN_OPTS} -XX:+UseConcMarkSweepGC -Xms${MAVEN_MEM}m -Xmx${MAVEN_MEM}m"
+    M2_OPTS=${MAVEN_OPTS}
 
     echo ""
     echo "=============================================="
@@ -44,42 +33,3 @@ function camel-fastinstall-checkstyle {
     camel-fastinstall -Psourcecheck "$@"
 }
 
-####################################################################
-# Camel - JDK 8
-####################################################################
-
-function camel-mvn-8 {
-    export JAVA_VERSION=8
-    export JAVA_HOME=$JAVA_HOME_8
-    export PATH=$JAVA_HOME/bin:$PATH
-
-    camel-mvn "$@"
-}
-
-function camel-fastinstall-8 {
-    camel-mvn-8 source:jar install -Pfastinstall "$@"
-}
-
-function camel-fastinstall-checkstyle-8 {
-    camel-fastinstall-8 -Psourcecheck "$@"
-}
-
-####################################################################
-# Camel - JDK 9
-####################################################################
-
-function camel-mvn-9 {
-    export JAVA_VERSION=9
-    export JAVA_HOME=$JAVA_HOME_9
-    export PATH=$JAVA_HOME/bin:$PATH
-
-    camel-mvn "$@"
-}
-
-function camel-fastinstall-9 {
-    camel-mvn-9 source:jar install -Pfastinstall "$@"
-}
-
-function camel-fastinstall-checkstyle-9 {
-    camel-fastinstall-9 -Psourcecheck "$@"
-}
