@@ -1,5 +1,6 @@
 if [ -f ${SDKMAN_CANDIDATES_DIR}/java/current/bin/java ]; then
     export JAVA_ROOT=${SDKMAN_CANDIDATES_DIR}/java
+    export IDEA_JDK=$JAVA_HOME
 else
     export JAVA_ROOT=${LB_SFW_LANG_HOME}/java
     export JAVA_VERSION_MAJOR=8
@@ -9,13 +10,18 @@ else
     if [ -d ${JAVA_HOME} ]; then
         pathadd ${JAVA_HOME}/bin
     fi
+
+    if [ -d ${LB_SFW_LANG_HOME}/java/jdk-${JAVA_VERSION_MAJOR} ]; then
+        export IDEA_JDK=${LB_SFW_LANG_HOME}/java/jdk-${JAVA_VERSION_MAJOR}
+    else
+        export IDEA_JDK=$JAVA_HOME
+    fi
 fi
 
 if [ ! -e /tmp/java-${LOGNAME} ]; then
     mkdir /tmp/java-${LOGNAME}
 fi
 
-export IDEA_JDK=$JAVA_HOME
 
 ####################################################################
 # Maven

@@ -56,27 +56,10 @@ alias sm-specs='cd $LB_WORK_HOME/redhat/dev/apache-servicemix-specs'
 alias gw='./gradlew'
 alias gver='./gradlew dependencyUpdates -Drevision=release'
 
-#
-# Tools
-#
-alias idea='$HOME/bin/start-jetbrains-idea.sh'
-alias clion='$HOME/bin/start-jetbrains-clion.sh'
-alias pycharm='$HOME/bin/start-jetbrains-pycharm.sh'
-
-
 if [ -e /opt/sfw/tools/sublime_text/sublime_text ]; then
     alias st='/opt/sfw/tools/sublime_text/sublime_text'
 else
     alias st='subl'
-fi
-
-#
-# GIT
-#
-if [ -e /opt/sfw/tools/hub/bin/hub ]; then
-    alias git='hub'
-elif [ -e /usr/local/bin/hub ]; then
-    alias git='hub'
 fi
 
 #

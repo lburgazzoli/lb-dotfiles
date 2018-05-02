@@ -5,3 +5,8 @@ if [ -d $HUB_HOME ]; then
     manpathadd $HUB_HOME/share/man
 fi
 
+if [ -e ${LB_SFW_TOOLS_HOME}/hub/bin/hub ]; then
+    alias git='hub'
+elif [ -e /usr/local/bin/hub ]; then
+    alias git='hub'
+fi
