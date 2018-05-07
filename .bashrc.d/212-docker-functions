@@ -726,6 +726,7 @@ function consul {
             agent \
                 -dev \
                 -server \
+                -ui \
                 -bootstrap \
                 -datacenter neverland \
                 -client 0.0.0.0 \
