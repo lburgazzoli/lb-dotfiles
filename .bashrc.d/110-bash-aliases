@@ -24,19 +24,6 @@ alias la="ls -laF ${colorflag}"
 alias ll='ls -l'
 
 #
-# Maven
-#
-alias m2build='mvn clean compile'
-alias m2inst='mvn clean install -Dmaven.javadoc.skip=true -DskipTests'
-alias m2fastinst='mvn clean install -Dmaven.javadoc.skip=true -Dmaven.test.skip=true'
-alias m2clean='mvn clean'
-alias m2test='mvn test'
-alias m2wrap='mvn -N io.takari:maven:wrapper'
-alias m2deps='mvn dependency:tree'
-alias m2deps-updates='mvn versions:display-dependency-updates'
-alias m2plug-updates='mvn versions:display-plugin-updates'
-
-#
 # Shortcuts
 #
 alias chron='cd $LB_WORK_HOME/chronicle'

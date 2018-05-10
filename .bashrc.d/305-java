@@ -35,6 +35,34 @@ fi
 export M2_OPTS=$MAVEN_OPTS
 export M2_REPO=${LB_DATA_CACHE_HOME}/maven-repo
 
+function _m2cmd {
+    if [ -f ./mvnw ]; then
+        ./mvnw "$@" 
+    else
+        mvn "$@"
+    fi
+}
+
+function m2c {
+    _m2cmd clean "$@"
+}
+
+function m2b {
+    _m2cmd clean compile "$@"
+}
+
+function m2i {
+    _m2cmd clean install -Dmaven.javadoc.skip=true -Dmaven.test.skip=true "$@"
+}
+
+function m2deps {
+    _m2cmd dependency:tree "$@"
+}
+
+function m2deps-updates {
+    _m2cmd versions:display-dependency-update "$@"
+}
+
 ####################################################################
 # JAVA_OPTS
 ####################################################################
