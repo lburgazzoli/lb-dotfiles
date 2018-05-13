@@ -18,7 +18,10 @@
         "workbench.iconTheme": "vscode-icons",
         "workbench.panel.location": "bottom",
         "workbench.activityBar.visible": false,
-        
+        "workbench.colorCustomizations": {
+                "editorIndentGuide.activeBackground": "#ff0000"
+        },
+
         // Windows
         "window.zoomLevel": 0,
         "window.menuBarVisibility": "toggle",

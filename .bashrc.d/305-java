@@ -60,7 +60,7 @@ function m2deps {
 }
 
 function m2deps-updates {
-    _m2cmd versions:display-dependency-update "$@"
+    _m2cmd versions:display-dependency-updates "$@"
 }
 
 ####################################################################
