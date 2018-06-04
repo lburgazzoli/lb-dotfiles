@@ -3,20 +3,26 @@
 export SYNDESIS_NAMESPACE=syndesis
 export SYNDESIS_WKS=$HOME/work/redhat/dev/syndesis
 
-pathadd ${SYNDESIS_WKS}/tools/bin
+if [ -f ${SYNDESIS_WKS}/tools/bin/syndesis ]; then
+    # add to path
+    pathadd ${SYNDESIS_WKS}/tools/bin
 
-function syndesis-env {
-    export SYNDESIS_URL=https://syndesis.$(minishift ip).nip.io
-}
+    # bash completion
+    source <(${SYNDESIS_WKS}/tools/bin/syndesis completion bash)
 
-function syndesis-minishift-reset {
-    $SYNDESIS_WKS/tools/bin/syndesis minishift --install --project syndesis
-}
+    function syndesis-env {
+        export SYNDESIS_URL=https://syndesis.$(minishift ip).nip.io
+    }
 
-function syndesis-get-app-secret {
-    oc get secret $1 -o jsonpath="{.data.application\.properties}" | base64 -d
-}
+    function syndesis-minishift-reset {
+        $SYNDESIS_WKS/tools/bin/syndesis minishift --install --project syndesis
+    }
 
-function syndesis-mvn-reset {
-    rm -rvf $M2_REPO/io/syndesis
-}
+    function syndesis-get-app-secret {
+        oc get secret $1 -o jsonpath="{.data.application\.properties}" | base64 -d
+    }
+
+    function syndesis-mvn-reset {
+        rm -rvf $M2_REPO/io/syndesis
+    }
+fi
