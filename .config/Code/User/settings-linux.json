@@ -71,5 +71,6 @@
                 "suppressResultsExplorerNotice": false,
                 "suppressShowKeyBindingsNotice": true
         },
+        "java.jdt.ls.vmargs": "-noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication -javaagent:\"/home/lburgazz/.vscode/extensions/GabrielBB.vscode-lombok-0.9.4/server/lombok.jar\" -Xbootclasspath/a:\"/home/lburgazz/.vscode/extensions/GabrielBB.vscode-lombok-0.9.4/server/lombok.jar\"",
         "gitlens.historyExplorer.enabled": true
 }
