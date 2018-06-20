@@ -1,0 +1,43 @@
+
+export ISTIO_HOME=${LB_SFW_TOOLS_HOME}/istio
+
+#############
+#
+#############
+
+function get-istio {
+    REPO_OWNER="istio"
+    REPO_NAME="istio"
+    BINARY_NAME="linux.tar.gz"
+    BINARY_PATH="${ISTIO_HOME}"
+    BINARY_TYPE="tgz"
+
+    if [ $# -eq 1 ]; then
+        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            --strip-components=1
+}
+
+#############
+#
+#############
+
+if [ -d ${ISTIO_HOME}/bin ]; then
+    pathadd ${ISTIO_HOME}/bin
+fi
