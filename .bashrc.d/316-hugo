@@ -1,6 +1,0 @@
-export HUGO_HOME=/opt/sfw/tools/hugo
-
-if [ -d $HUGO_HOME ]; then
-    pathadd $HUGO_HOME
-fi
-
