@@ -14,9 +14,11 @@ if [ -d ${CARGO_HOME}/bin ]; then
     fi
 
     function cargo-install-base {
+        cargo install cargo-update
         cargo install fd-find
         cargo install ripgrep
-        cargo install cargo-update
+        cargo install bat
+        cargo install exa
     }
 fi
 
