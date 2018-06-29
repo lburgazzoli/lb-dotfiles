@@ -1,0 +1,26 @@
+function get-helm { 
+    REPO_OWNER="kubernetes";
+    REPO_NAME="helm";
+    BINARY_NAME="linux-amd64";
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/helm";
+    BINARY_TYPE="tat.gz";
+    
+    if [ $# -eq 1 ]; then
+        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}";
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest | jq --raw-output ".assets[] | select(.name | endswith(\"${BINARY_NAME}.${BINARY_TYPE}\")) | .browser_download_url");
+    fi;
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH};
+    else
+        rm -rv ${BINARY_PATH}/*;
+    fi;
+
+    echo "Downloading from: $URL";
+    curl --location --silent $URL | tar xvzf - --directory ${BINARY_PATH} --strip-components=1
+}
+
+if [ -d ${LB_SFW_TOOLS_HOME}/helm ]; then
+    pathadd ${LB_SFW_TOOLS_HOME}/helm
+fi
