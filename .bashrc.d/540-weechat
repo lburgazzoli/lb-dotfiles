@@ -1,0 +1,32 @@
+function weechat {
+    docker-require bitlbee
+
+    docker-setup-x11
+
+    local DOCKER_IMAGE="lburgazzoli/app-weechat"
+    local DOCKER_USER=${LOGNAME}
+    local DOCKER_NAME="weechat"
+    local XSOCK=/tmp/.X11-unix
+    local XAUTH=/tmp/.docker.xauth
+
+    docker run \
+        -ti \
+        --rm \
+        --user ${DOCKER_USER} \
+        --net bitlbee \
+        --name ${DOCKER_NAME} \
+        --volume /etc/localtime:/etc/localtime:ro \
+        --volume /etc/machine-id:/etc/machine-id:ro \
+        --volume /tmp/.x11-unix:/tmp/.x11-unix \
+        --volume /var/run/dbus:/var/run/dbus \
+        --volume /run/user/$(id -u):/run/user/$(id -u) \
+        --volume $HOME/.weechat:/home/${DOCKER_USER}/.weechat:Z \
+        --volume $HOME/dwl:/home/${DOCKER_USER}/dwl:Z \
+        --volume $HOME/tmp:/home/${DOCKER_USER}/tmp:Z \
+        --env DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus" \
+        --env DISPLAY=unix${DISPLAY} \
+        --env XAUTHORITY=${XAUTH} \
+        --env TERM=$TERM \
+        ${DOCKER_IMAGE} \
+            weechat-curses
+}

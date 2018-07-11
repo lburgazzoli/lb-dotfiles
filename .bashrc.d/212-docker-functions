@@ -234,29 +234,6 @@ function telegram {
         ${DOCKER_IMAGE}
 }
 
-function bitlbee {
-    local DOCKER_IMAGE="lburgazzoli/app-bitlbee"
-    local DOCKER_NAME="bitlbee"
-    local DOCKER_USER=${LOGNAME}
-
-    docker network ls | grep bitlbee 2>&1 > /dev/null
-    if [ $? -ne 0 ]; then
-        docker network create bitlbee
-    fi
-
-    docker run \
-        --rm \
-        --detach \
-        --user root \
-        --net bitlbee \
-        --name ${DOCKER_NAME} \
-        --volume /etc/localtime:/etc/localtime:ro \
-        --volume /etc/machine-id:/etc/machine-id:ro \
-        --volume $HOME/.config/bitlbee:/home/${DOCKER_USER}/.config/bitlbee:Z \
-        ${DOCKER_IMAGE} \
-            bitlbee -F -n -v -u ${DOCKER_USER} -d /home/${DOCKER_USER}/.config/bitlbee
-}
-
 ################################################################################
 # Internet
 ################################################################################
@@ -721,6 +698,7 @@ function consul {
         --rm \
         --name $DOCKER_NAME \
         --env GOMAXPROCS=2 \
+        --env CONSUL_UI_BETA=true \
         --publish 8500:8500 \
         $DOCKER_IMAGE \
             agent \
