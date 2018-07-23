@@ -7,9 +7,10 @@
         "docker-registry.usersys.redhat.com",
         "ce-registry.usersys.redhat.com"
     ],
+    "iso-url": "centos",
     "memory": "4g",
-    "openshift-version": "v3.7.2",
+    "openshift-version": "v3.9.0",
     "show-libmachine-logs": true,
-    "vm-driver": "kvm",
-    "iso-url": "centos"
+    "skip-check-openshift-release": true,
+    "vm-driver": "kvm"
 }
