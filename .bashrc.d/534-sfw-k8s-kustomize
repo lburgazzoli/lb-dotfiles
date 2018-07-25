@@ -1,0 +1,38 @@
+
+export K8S_KUSTOMIZE_HOME=${LB_SFW_TOOLS_HOME}/k8s/kustomize
+
+#############
+#
+#############
+
+function get-k8s-kustomize {
+    REPO_OWNER="kubernetes-sigs"
+    REPO_NAME="kustomize"
+    BINARY_NAME="linux_amd64"
+    BINARY_PATH="${K8S_KUSTOMIZE_HOME}"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH}/bin ]; then
+        mkdir -p ${BINARY_PATH}/bin
+    else
+        rm -rv ${BINARY_PATH}/bin/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL --output ${BINARY_PATH}/bin/kustomize
+    chmod u+x ${BINARY_PATH}/bin/kustomize
+
+    pathadd ${BINARY_PATH}/bin
+}
+
+#############
+#
+#############
+
+if [ -d ${K8S_KUSTOMIZE_HOME}/bin ]; then
+    pathadd ${K8S_KUSTOMIZE_HOME}/bin
+fi
