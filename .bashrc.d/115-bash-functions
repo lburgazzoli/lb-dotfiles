@@ -166,34 +166,6 @@ function get-rust {
             --strip-components=1
 }
 
-function get-hugo {
-    REPO_OWNER="gohugoio"
-    REPO_NAME="hugo"
-    BINARY_NAME="Linux-64bit.tar.gz"
-    BINARY_PATH="/opt/sfw/tools/hugo"
-    BINARY_TYPE="tar.gz"
-
-    if [ $# -eq 1 ]; then
-        URL= "https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
-    else
-        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-            | jq --raw-output \
-                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
-    fi
-
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
-    fi
-
-    echo "Downloading from: $URL"
-
-    curl --location --silent $URL \
-        | tar xvzf - \
-            --directory ${BINARY_PATH}
-}
-
 function get-stern {
     REPO_OWNER="wercker"
     REPO_NAME="stern"
