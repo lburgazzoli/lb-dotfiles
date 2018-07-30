@@ -101,35 +101,6 @@ function get-minishift {
     chmod u+x ${BINARY_PATH}/minishift
 }
 
-function get-hub {
-    REPO_OWNER="github"
-    REPO_NAME="hub"
-    BINARY_NAME="hub-linux-amd64"
-    BINARY_PATH="${LB_SFW_TOOLS_HOME}/hub"
-    BINARY_TYPE="tgz"
-
-    if [ $# -eq 1 ]; then
-        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
-    else
-        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-            | jq --raw-output \
-                ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
-    fi
-
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
-    fi
-
-    echo "Downloading from: $URL"
-
-    curl --location --silent $URL \
-        | tar xvzf - \
-            --directory ${BINARY_PATH} \
-            --strip-components=1
-}
-
 function get-go {
     if [ -d ${GO_BASE}/${GO_VERSION} ]; then
         rm -rf ${GO_BASE}/${GO_VERSION}
@@ -197,7 +168,7 @@ function get-grv {
     REPO_OWNER="rgburke"
     REPO_NAME="grv"
     BINARY_NAME="linux64"
-    BINARY_PATH="/opt/sfw/tools/grv"
+    BINARY_PATH="/opt/data/sfw/tools/grv"
 
     if [ $# -eq 1 ]; then
         URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/grv_v${1}_${BINARY_NAME}"
