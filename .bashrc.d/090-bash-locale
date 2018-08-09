@@ -1,0 +1,4 @@
+# set the LC_TIME to en_GB so monday is
+# the first day of the week
+
+export LC_TIME="en_GB.UTF-8"
