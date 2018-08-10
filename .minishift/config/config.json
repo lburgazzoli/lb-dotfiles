@@ -1,5 +1,5 @@
 {
-    "cpus": 2,
+    "cpus": 3,
     "disk-size": "60g",
     "insecure-registry": [
         "172.30.0.0/16",
