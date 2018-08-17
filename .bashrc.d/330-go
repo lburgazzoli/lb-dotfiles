@@ -7,7 +7,8 @@ if [ ${LB_OS_NAME} == "darwin" ]; then
     pathadd ${GOPATH}/bin
     pathadd ${GOROOT}/bin
 else
-    export GO_VERSION=1.10.3
+    #export GO_VERSION=1.10.3
+    export GO_VERSION=1.11rc1
     export GO_BASE=${LB_SFW_LANG_HOME}/go
     export GO_HOME=${GO_BASE}/${GO_VERSION}
 
