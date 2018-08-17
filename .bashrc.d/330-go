@@ -15,6 +15,7 @@ else
     if [ -d ${GO_HOME} ]; then
         export GOROOT=${GO_HOME}
         export GOPATH=${HOME}/work/lb/dev/go
+        export GO111MODULE=on
 
         pathadd ${GOROOT}/bin
         pathadd ${GOPATH}/bin
