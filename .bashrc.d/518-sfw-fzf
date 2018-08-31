@@ -1,0 +1,7 @@
+
+if hash fzf 2> /dev/null; then
+    alias preview="fzf --preview 'bat --color \"always\" {}'"
+    # add support for ctrl+o to open selected file in VS Code
+    export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(code {})+abort'"
+fi
+
