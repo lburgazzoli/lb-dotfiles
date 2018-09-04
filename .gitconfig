@@ -40,11 +40,11 @@
     list-mine = !"git log --author=$(git config user.name) --pretty=format:'%C(green)%h%x09%C(cyan)%ad%x09%C(reset)%s' --date=format:'%Y-%m-%d %H:%M:%S'"
     last = log --date=relative --name-status -1
 
-    ls = "!f() { git log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative --name-status ${1-HEAD}; }; f"
-    lt = "!f() { git log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative ${1-HEAD}; }; f"
-    lc = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=short ${1-HEAD}; }; f"
+    ls = log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative --name-status
+    lt = log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative
+    lc = log --pretty=format:'%<(10)%Cred%h%Creset | %Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=short
     lcd = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=short ${1-origin}..${2-HEAD}; }; f"
-    lcr = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %<(16)%Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=relative ${1-HEAD}; }; f"
+    lcr = log --pretty=format:'%<(10)%Cred%h%Creset | %<(16)%Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=relative
     
     diff-origin = "!f() { git diff --stat --color origin/${1-master}; }; f"
     diff-upstream = "!f() { git diff --stat --color upstream/${1-master}; }; f"
