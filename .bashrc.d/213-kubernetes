@@ -13,8 +13,7 @@ pathadd ${LB_SFW_TOOLS_HOME}/stern
 if hash kubectl 2>/dev/null; then
     source <(kubectl completion bash)
 
-    alias k='kubectl'
-    
+    alias k='kubectl'    
 fi
 
 if hash stern 2>/dev/null; then
