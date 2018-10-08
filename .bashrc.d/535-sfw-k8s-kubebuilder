@@ -29,6 +29,7 @@ function get-k8s-kubebuilder {
             --strip-components=1
 
     pathadd ${BINARY_PATH}/bin
+    rm -v ${BINARY_PATH}/bin/kubectl
 }
 
 #############
