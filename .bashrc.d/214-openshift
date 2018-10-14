@@ -111,7 +111,9 @@ function oc-port-forward-pg {
 }
 
 function oc-watch-pods {
-    watch -c -d -n 1 oc get pods --show-all=false
+    watch -c -d -n 1 'oc get pods --field-selector=status.phase!=Succeeded'
+
+    # blush -g "Running"
 }
 
 
