@@ -82,6 +82,10 @@ function minishift-login-syndesis {
     minishift-login syndesis
 }
 
+function minishift-login-camel-k {
+    minishift-login camel-k
+}
+
 function minishift-drop {
     sudo iptables -A OUTPUT -p tcp -m tcp --dport 8443 -j DROP
 }

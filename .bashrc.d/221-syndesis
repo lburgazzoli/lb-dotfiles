@@ -25,4 +25,11 @@ if [ -f ${SYNDESIS_WKS}/tools/bin/syndesis ]; then
     function syndesis-mvn-reset {
         rm -rvf $M2_REPO/io/syndesis
     }
+
+    function syndesis-scale {
+        for dc in $(oc get dc -n syndesis -o name) 
+        do 
+            oc scale $dc --replicas=$1
+        done
+    }
 fi
