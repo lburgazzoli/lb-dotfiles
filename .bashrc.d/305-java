@@ -21,11 +21,16 @@ else
     if [ -d ${JAVA_HOME} ]; then
         pathadd ${JAVA_HOME}/bin
     fi
+
+    if [ -d ${LB_SFW_LANG_HOME}/java/graalvm ]; then
+        export GRAALVM_HOME=${LB_SFW_LANG_HOME}/java/graalvm
+    fi
 fi
 
 if [ ! -e /tmp/java-${LOGNAME} ]; then
     mkdir /tmp/java-${LOGNAME}
 fi
+
 
 
 ####################################################################
@@ -76,11 +81,3 @@ fi
 
 export JAVA_OPTS
 
-
-####################################################################
-# GRAAL
-####################################################################
-
- export GRAAL_ROOT=${LB_SFW_LANG_HOME}/java
- export GRAAL_VERSION=1.0.0
- export GRAAL_PATH=${GRAAL_ROOT}/graalvm-${GRAAL_VERSION}
