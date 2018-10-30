@@ -60,7 +60,7 @@ function mb {
     _mwn_cmd clean compile "$@"
 }
 
-function mvi {
+function mci {
     _mwn_cmd clean install -DskipTests=true "$@"
 }
 

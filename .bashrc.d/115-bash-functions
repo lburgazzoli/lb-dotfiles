@@ -1,12 +1,3 @@
-## cannot use an alias to inject the command line params
-mci() {
-    mvn clean install "$@" | h -i error success
-}
-
-### cannot use an alias to inject the command line params
-mcis() {
-    mvn clean install -DskipTests -Dmaven.javadoc.skip=true "$@" | h -i "error\|failure" success
-}
 
 # Color man pages
 man() {
