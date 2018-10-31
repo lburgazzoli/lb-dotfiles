@@ -6,6 +6,7 @@
     autocrlf = input
     editor = vim
     pager = diff-so-fancy | less --tabs=4 -RFX
+    excludesfile = ~/.gitignore.global
 [color]
     ui = auto
 [color "branch"]
