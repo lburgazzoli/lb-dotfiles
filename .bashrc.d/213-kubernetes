@@ -6,9 +6,14 @@
 ################################################################################
 
 pathadd ${LB_SFW_TOOLS_HOME}/kubernetes/bin
+pathadd ${LB_SFW_TOOLS_HOME}/k8s/bin
 pathadd ${LB_SFW_TOOLS_HOME}/minikube/bin
 pathadd ${LB_SFW_TOOLS_HOME}/kail
 pathadd ${LB_SFW_TOOLS_HOME}/stern
+
+if hash operator-sdk 2>/dev/null; then
+    source <(operator-sdk completion bash)
+fi
 
 if hash kubectl 2>/dev/null; then
     source <(kubectl completion bash)
