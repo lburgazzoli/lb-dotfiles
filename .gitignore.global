@@ -10,3 +10,4 @@
 .classpath
 .factorypath
 .vscode
+.envrc

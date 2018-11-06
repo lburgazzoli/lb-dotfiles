@@ -1,5 +1,5 @@
 {
-    "cpus": 3,
+    "cpus": 4,
     "disk-size": "60g",
     "insecure-registry": [
         "172.30.0.0/16",
@@ -8,8 +8,8 @@
         "ce-registry.usersys.redhat.com"
     ],
     "iso-url": "centos",
-    "memory": "4g",
-    "openshift-version": "v3.9.0",
+    "memory": "8g",
+    "openshift-version": "v3.11.0",
     "show-libmachine-logs": true,
     "skip-check-openshift-release": true,
     "vm-driver": "kvm"
