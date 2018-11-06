@@ -1,0 +1,10 @@
+export DIRENV_HOME=${LB_SFW_TOOLS_HOME}/direnv
+
+if [ -d $HUB_HOME ]; then
+    pathadd $DIRENV_HOME/bin
+    manpathadd $DIRENV_HOME/share/man
+
+    if hash direnv 2>/dev/null; then
+        eval "$(direnv hook bash)"
+    fi
+fi
