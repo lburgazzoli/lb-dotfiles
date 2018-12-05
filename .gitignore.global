@@ -13,3 +13,7 @@
 .envrc
 
 dive.log
+
+# TODO: remove
+.golangci.yml
+
