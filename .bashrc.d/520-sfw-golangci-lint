@@ -8,7 +8,7 @@ fi
 function get-golangci-lint {
     REPO_OWNER="golangci"
     REPO_NAME="golangci-lint"
-    BINARY_NAME="-linux-386.tar.gz"
+    BINARY_NAME="-linux-amd64.tar.gz"
     BINARY_PATH="${LB_SFW_TOOLS_HOME}/golangci-lint"
 
     URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
