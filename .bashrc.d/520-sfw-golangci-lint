@@ -1,7 +1,7 @@
 export GOLANGCI_LINT_HOME=${LB_SFW_TOOLS_HOME}/golangci-lint
 
 if [ -d $GOLANGCI_LINT_HOME ]; then
-    pathadd $GOLANGCI_LINT_HOME/bin
+    pathadd $GOLANGCI_LINT_HOME
     manpathadd $GOLANGCI_LINT_HOME/share/man
 fi
 
