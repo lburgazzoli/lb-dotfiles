@@ -1,0 +1,40 @@
+export GOLANGCI_LINT_HOME=${LB_SFW_TOOLS_HOME}/golangci-lint
+
+if [ -d $GOLANGCI_LINT_HOME ]; then
+    pathadd $GOLANGCI_LINT_HOME/bin
+    manpathadd $GOLANGCI_LINT_HOME/share/man
+fi
+
+if [ -e ${LB_SFW_TOOLS_HOME}/golangci-lint/bin/golangci-lint ]; then
+    alias git='golangci-lint'
+elif [ -e /usr/local/bin/golangci-lint ]; then
+    alias git='golangci-lint'
+fi
+
+function get-golangci-lint {
+    REPO_OWNER="golangci"
+    REPO_NAME="golangci-lint"
+    BINARY_NAME="-linux-386.tar.gz"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/golangci-lint"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    echo $URL
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            --strip-components=1
+
+    pathadd ${BINARY_PATH}
+}
