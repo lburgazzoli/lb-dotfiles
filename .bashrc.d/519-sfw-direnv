@@ -27,3 +27,7 @@ function get-direnv {
 
     pathadd ${BINARY_PATH}
 }
+
+if direnv brew 2> /dev/null; then
+    eval "$(direnv hook bash)"
+fi
