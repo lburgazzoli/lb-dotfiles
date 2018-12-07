@@ -1,10 +1,29 @@
 export DIRENV_HOME=${LB_SFW_TOOLS_HOME}/direnv
 
-if [ -d $HUB_HOME ]; then
-    pathadd $DIRENV_HOME/bin
-    manpathadd $DIRENV_HOME/share/man
-
-    if hash direnv 2>/dev/null; then
-        eval "$(direnv hook bash)"
-    fi
+if [ -d $DIRENV_HOME ]; then
+    pathadd $DIRENV_HOME
 fi
+
+function get-direnv {
+    REPO_OWNER="direnv"
+    REPO_NAME="direnv"
+    BINARY_NAME="direnv.linux-amd64"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/direnv"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent --output $BINARY_PATH/direnv $URL
+    chmod u+x $BINARY_PATH/direnv
+
+    pathadd ${BINARY_PATH}
+}
