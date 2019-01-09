@@ -72,6 +72,10 @@ function mdeps-updates {
     _mwn_cmd versions:display-dependency-updates "$@"
 }
 
+function mgoals {
+    _mvn_cmd fr.jcgay.maven.plugins:buildplan-maven-plugin:list "$@"
+}
+
 ####################################################################
 # JAVA_OPTS
 ####################################################################
