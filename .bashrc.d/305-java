@@ -40,7 +40,7 @@ fi
 export M2_OPTS=$MAVEN_OPTS
 export M2_REPO=${LB_DATA_CACHE_HOME}/maven-repo
 
-function _mwn_cmd {
+function _mvn_cmd {
     if [ -f ./mvnw ]; then
         ./mvnw "$@" 
     else
@@ -49,27 +49,27 @@ function _mwn_cmd {
 }
 
 function mc {
-    _mwn_cmd clean "$@"
+    _mvn_cmd clean "$@"
 }
 
 function mcp {
-    _mwn_cmd clean package "$@"
+    _mvn_cmd clean package "$@"
 }
 
 function mb {
-    _mwn_cmd clean compile "$@"
+    _mvn_cmd clean compile "$@"
 }
 
 function mci {
-    _mwn_cmd clean install -DskipTests=true "$@"
+    _mvn_cmd clean install -DskipTests=true "$@"
 }
 
 function mdeps {
-    _mwn_cmd dependency:tree "$@"
+    _mvn_cmd dependency:tree "$@"
 }
 
 function mdeps-updates {
-    _mwn_cmd versions:display-dependency-updates "$@"
+    _mvn_cmd versions:display-dependency-updates "$@"
 }
 
 function mgoals {
