@@ -18,26 +18,6 @@ if [ -d ${LB_SFW_TOOLS_HOME}/minishift/bin ]; then
     fi
 fi
 
-#function minishift-start {
-#    local VM_DRIVER=kvm
-#
-#    if [ ${LB_OS_NAME} == "darwin" ]; then
-#        VM_DRIVER=xhyve
-#    fi
-#
-#    minishift start \
-#        --alsologtostderr \
-#        --show-libmachine-logs \
-#        --vm-driver=$VM_DRIVER \
-#        --cpus=2 \
-#        --memory=6144 \
-#        --disk-size=40g \
-#        --insecure-registry=172.30.0.0/16 \
-#        --insecure-registry=registry.access.redhat.com \
-#        --insecure-registry=docker-registry.usersys.redhat.com \
-#        --insecure-registry=ce-registry.usersys.redhat.com
-#}
-
 function minishift-env {
     MINISHIFT_IP="$(minishift ip)"
     export KUBERNETES_DOMAIN="${MINISHIFT_IP}.nip.io"
@@ -67,15 +47,7 @@ function minishift-login {
         --server "$(minishift ip):8443" \
         --insecure-skip-tls-verify 
 
-    oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
-}
-
-function minishift-login-fis {
-    minishift-login fis
-}
-
-function minishift-login-camel {
-    minishift-login camel
+    #oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
 }
 
 function minishift-login-syndesis {
@@ -93,6 +65,15 @@ function minishift-drop {
 function minishift-allow {
     sudo iptables -D OUTPUT -p tcp -m tcp --dport 8443 -j DROP
 }
+
+function minishift-setup-ko {
+    eval $(minishift docker-env)
+    export K8S_CLUSTER_OVERRIDE=$(minishift ip | sed -e 's/\./\-/g'):8443
+    export K8S_USER_OVERRIDE=admin
+    export KO_DOCKER_REPO='ko.local'
+    export DOCKER_REPO_OVERRIDE="${KO_DOCKER_REPO}"
+}
+
 
 function oc-expose {
     if [ "$#" -eq 1 ]; then
@@ -116,10 +97,7 @@ function oc-port-forward-pg {
 
 function oc-watch-pods {
     watch -c -d -n 1 'oc get pods --field-selector=status.phase!=Succeeded'
-
-    # blush -g "Running"
 }
-
 
 
 
