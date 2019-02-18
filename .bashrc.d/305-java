@@ -77,7 +77,7 @@ function mgoals {
 }
 
 function mdeploy {
-    _mvn_cmd deploy -DskipTests=true -DaltSnapshotDeploymentRepository=nexus-shared::default::http://nexus-shared.$(minishift ip).nip.io/repository/maven-snapshots/
+    _mvn_cmd deploy -DskipTests=true -DaltSnapshotDeploymentRepository=nexus-shared::default::http://nexus-shared.$(minishift ip).nip.io/repository/maven-snapshots/ "$@"
 }
 
 ####################################################################
