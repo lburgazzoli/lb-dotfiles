@@ -41,21 +41,11 @@ function minishift-login-adm {
 
 function minishift-login {
     oc login \
-        --namespace $1 \
         --username developer \
         --password developer \
         --server "$(minishift ip):8443" \
-        --insecure-skip-tls-verify 
-
-    #oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
-}
-
-function minishift-login-syndesis {
-    minishift-login syndesis
-}
-
-function minishift-login-camel-k {
-    minishift-login camel-k
+        --insecure-skip-tls-verify \
+        "$@"
 }
 
 function minishift-drop {
