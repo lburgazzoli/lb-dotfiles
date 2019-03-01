@@ -1,0 +1,14 @@
+
+####################################################################
+# Camel K
+####################################################################
+
+function kr {
+    kamel run \
+        --dev \
+        --logging-level io.netty=DEBUG \
+        --logging-level \
+        org.apache.camel.k=DEBUG \
+        "$@"
+}
+
