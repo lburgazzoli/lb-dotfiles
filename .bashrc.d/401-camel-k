@@ -3,12 +3,8 @@
 # Camel K
 ####################################################################
 
-function kr {
-    kamel run \
-        --dev \
-        --logging-level io.netty=DEBUG \
-        --logging-level \
-        org.apache.camel.k=DEBUG \
-        "$@"
+function ck-start-minikube {
+    minikube start \
+        --profile camel-k \
+        --extra-config=apiserver.enable-admission-plugins="LimitRanger,NamespaceExists,NamespaceLifecycle,ResourceQuota,ServiceAccount,DefaultStorageClass,MutatingAdmissionWebhook"
 }
-
