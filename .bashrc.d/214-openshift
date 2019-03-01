@@ -48,6 +48,20 @@ function minishift-login {
         "$@"
 }
 
+function minishift-login-syndesis {
+    #oc config set-context "$profile" --namespace="$project"
+    oc config set-context syndesis --namespace=syndesis
+    
+    minishift-login --namespace=syndesis
+}
+
+function minishift-login-syndesis-adm {
+    #oc config set-context "$profile" --namespace="$project"
+    oc config set-context syndesis --namespace=syndesis
+    
+    minishift-login-adm --namespace=syndesis
+}
+
 function minishift-drop {
     sudo iptables -A OUTPUT -p tcp -m tcp --dport 8443 -j DROP
 }
