@@ -15,7 +15,7 @@ if hash kubectl 2>/dev/null; then
     source <(kubectl completion bash)
 
     alias k='kubectl'
-    complete -o default -F __start_kubectl  k
+    complete -o default -F __start_kubectl k
 fi
 
 if hash stern 2>/dev/null; then
