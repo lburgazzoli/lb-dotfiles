@@ -16,8 +16,8 @@ export HISTCONTROL=ignoredups:erasedups
 export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 export HISTTIMEFORMAT="%d/%m/%y %T "
 
-export EDITOR=vimx
-export SVN_EDITOR=vimx
+export EDITOR=vim
+export SVN_EDITOR=vim
 export PAGER=less
 export MANPAGER="less -X"
 

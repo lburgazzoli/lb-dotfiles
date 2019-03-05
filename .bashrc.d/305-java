@@ -90,6 +90,8 @@ function mdeploy {
 
 GRAPE_OPTS="-Dgrape.root=${LB_DATA_CACHE_HOME}/groovy-grape-repo -Dgrape.config=${HOME}/.groovy/grapeConfig.xml"
 JAVA_OPTS="${GRAPE_OPTS}"
+JAVA_DEBUG="-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n"
+JAVA_DEBUG_SUSPEND="-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=y"
 
 if [ -c /dev/urandom ]; then
     JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom"
