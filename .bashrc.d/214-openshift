@@ -43,9 +43,9 @@ function get-operator-sdk {
 
 function minishift-env {
     MINISHIFT_IP="$(minishift ip)"
-    export KUBERNETES_DOMAIN="${MINISHIFT_IP}.nip.io"
-    export KUBERNETES_MASTER="https://${MINISHIFT_IP}:8443"
-    export OPENSHIFT_MASTER="https://${MINISHIFT_IP}:8443"
+    #export KUBERNETES_DOMAIN="${MINISHIFT_IP}.nip.io"
+    #export KUBERNETES_MASTER="https://${MINISHIFT_IP}:8443"
+    #export OPENSHIFT_MASTER="https://${MINISHIFT_IP}:8443"
     eval $(minishift docker-env)
     eval $(minishift oc-env)
 
