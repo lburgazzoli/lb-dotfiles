@@ -29,3 +29,7 @@ fi
 function minikube-env {
     eval $(minikube docker-env)
 }
+
+function watch-pods {
+    watch -c -d -n 1 "kubectl get pods --field-selector=status.phase!=Succeeded $@"
+}
