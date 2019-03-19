@@ -122,9 +122,5 @@ function oc-port-forward-pg {
     oc-port-forward $1 5432
 }
 
-function oc-watch-pods {
-    watch -c -d -n 1 'oc get pods --field-selector=status.phase!=Succeeded'
-}
-
 
 
