@@ -81,7 +81,9 @@ function mdeploy {
     _mvn_cmd \
         deploy \
         -DskipTests=true \
-        -DaltSnapshotDeploymentRepository=nexus-shared::default::http://localhost:8081/repository/maven-snapshots/ "$@"
+        -DaltSnapshotDeploymentRepository=nexus-shared::default::http://localhost:8081/repository/maven-snapshots/ \
+        -DaltDeploymentRepository=nexus-shared::default::http://localhost:8081/repository/maven-snapshots/ \
+        "$@"
 }
 
 ####################################################################

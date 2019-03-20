@@ -6,13 +6,13 @@
 function ck-minikube-setup {
     minikube profile camel-k
     minikube config set kubernetes-version v1.12.0
-    minikube config set memory 8192
-    minikube config set cpus 3
+    minikube config set memory 16384
+    minikube config set cpus 4
     minikube config set disk-size 40g
     minikube config set vm-driver kvm2
 }
 
-function ck-start-minikube {
+function ck-minikube-start {
 
     ck-minikube-setup
 
