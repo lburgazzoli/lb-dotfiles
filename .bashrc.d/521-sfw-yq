@@ -1,0 +1,29 @@
+export YQ_HOME=${LB_SFW_TOOLS_HOME}/yq
+
+if [ -d $YQ_HOME ]; then
+    pathadd $YQ_HOME
+fi
+
+function get-yq {
+    REPO_OWNER="mikefarah"
+    REPO_NAME="yq"
+    BINARY_NAME="yq_linux_amd64"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/yq"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent --output $BINARY_PATH/yq $URL
+    chmod u+x $BINARY_PATH/yq
+
+    pathadd ${BINARY_PATH}
+}
