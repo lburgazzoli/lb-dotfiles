@@ -27,10 +27,9 @@ alias ll='ls -l'
 # Shortcuts
 #
 alias chron='cd $LB_WORK_HOME/chronicle'
-alias red='cd $LB_WORK_HOME/redhat'
+alias rh='cd $LB_WORK_HOME/redhat'
 alias fuse='cd $LB_WORK_HOME/redhat/fuse'
 alias lb='cd $LB_WORK_HOME/lb'
-alias ors='cd $LB_WORK_HOME/lb/dev/lb-openors'
 alias camel='cd $LB_WORK_HOME/apache/dev/camel'
 alias karaf='cd $LB_WORK_HOME/apache/dev/karaf'
 alias apache='cd $LB_WORK_HOME/apache'
