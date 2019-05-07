@@ -11,7 +11,7 @@ set showmode
 set showcmd
 
 " have the mouse enabled all the time:
-set mouse=a
+set mouse=r
 
 " don't have files trying to override this .vimrc:
 set nomodeline
