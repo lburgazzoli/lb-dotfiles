@@ -9,6 +9,7 @@ pathadd ${LB_SFW_TOOLS_HOME}/kubernetes/bin
 pathadd ${LB_SFW_TOOLS_HOME}/k8s/bin
 pathadd ${LB_SFW_TOOLS_HOME}/minikube/bin
 pathadd ${LB_SFW_TOOLS_HOME}/kail
+pathadd ${LB_SFW_TOOLS_HOME}/kui/bin
 pathadd ${LB_SFW_TOOLS_HOME}/stern
 
 if hash kubectl 2>/dev/null; then
