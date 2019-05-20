@@ -40,6 +40,14 @@ fi
 export M2_OPTS=$MAVEN_OPTS
 export M2_REPO=${LB_DATA_CACHE_HOME}/maven-repo
 
+if [ ! -e /tmp/artifacts ]; then
+    mkdir /tmp/artifacts
+fi
+if [ ! -e /tmp/artifacts/m2 ]; then
+    ln -s $M2_REPO /tmp/artifacts/m2
+fi
+
+
 function _mvn_cmd {
     if [ -f ./mvnw ]; then
         ./mvnw "$@" 
