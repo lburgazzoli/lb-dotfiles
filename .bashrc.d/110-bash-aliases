@@ -56,7 +56,5 @@ if [ -f /etc/fedora-release ]; then
     alias dnf-up='sudo dnf clean all && sudo dnf update --refresh'
 fi
 
-#alias dropboxctl="docker exec -it dropbox bin/dropbox.py"
 
-alias jmx4perl="docker run --rm -it --net=host -v ~/.j4p:/root/.j4p jolokia/jmx4perl jmx4perl"
-alias j4psh="docker run --rm -it --net=host -v ~/.j4p:/root/.j4p jolokia/jmx4perl j4psh"
+alias ps-rss='ps ax -o pid,rss,command | numfmt --header --from-unit=1024 --to=iec --field 2|grep -v grep'
