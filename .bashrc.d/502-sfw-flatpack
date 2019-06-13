@@ -1,0 +1,2 @@
+pathadd ~/.local/share/flatpak/exports/bin
+pathadd /var/lib/flatpak/exports/bin
