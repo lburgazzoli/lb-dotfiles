@@ -70,3 +70,6 @@ endif
 
 set autowrite
 
+filetype plugin on
+filetype plugin indent on
+
