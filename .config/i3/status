@@ -1,0 +1,27 @@
+general {
+        output_format = "i3bar"
+        colors = true
+        interval = 5
+}
+
+order += "time"
+order += "battery 0"
+order += "battery 1"
+
+time {
+    format = "%d/%m/%y %H:%M:%S"
+}
+
+battery 0 {
+    threshold_type = "time"
+    integer_battery_capacity = "true"
+    low_threshold = "15"
+    format = "%percentage"
+}
+
+battery 1 {
+    threshold_type = "time"
+    integer_battery_capacity = "true"
+    low_threshold = "15"
+    format = "%percentage"
+}

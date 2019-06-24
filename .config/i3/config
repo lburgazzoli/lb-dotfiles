@@ -26,6 +26,23 @@ font pango:Source Code Pro 8
 # X core fonts rendering does not support right-to-left and this being a bitmap
 # font, it doesn’t scale on retina/hidpi displays.
 
+set $base00 #272822
+set $base01 #383830
+set $base02 #49483e
+set $base03 #75715e
+set $base04 #a59f85
+set $base05 #f8f8f2
+set $base06 #f5f4f1
+set $base07 #f9f8f5
+set $base08 #f92672
+set $base09 #fd971f
+set $base0A #f4bf75
+set $base0B #a6e22e
+set $base0C #a1efe4
+set $base0D #66d9ef
+set $base0E #ae81ff
+set $base0F #cc6633
+
 # i3locker
 bindsym $mod+Ctrl+l exec i3lock -d -t -i $HOME/doc/pictures/wallpapers/w.png
 
@@ -38,6 +55,9 @@ floating_modifier $mod
 #bindsym $mod+Return exec xfce4-terminal
 bindsym $mod+Return exec tilix
 
+bindsym Ctrl+Shift+d split v, exec tilix
+bindsym Ctrl+Shift+r split h, exec tilix
+
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -47,6 +67,9 @@ bindsym $mod+d exec dmenu_run
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
 # bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+
+bindsym $mod+F2 exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/i3/rofi.rasi -font "Source Code Pro 8" -show run
+bindsym $mod+Tab exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/i3/rofi.rasi -font "Source Code Pro 8" -show window
 
 # change focus
 bindsym $mod+j focus left
@@ -148,10 +171,10 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? ' -B 'Yes, exit i3' 'i3-msg exit'"
 
-client.focused #d64937 #d64937 #1f1f1f
-client.unfocused #545454 #2d2d2d #D9D9D9
-client.focused_inactive #545454 #2d2d2d #D9D9D9
-client.urgent #51c4d4 #ecedee #51c4d4
+#client.focused #d64937 #d64937 #1f1f1f
+#client.unfocused #545454 #2d2d2d #D9D9D9
+#client.focused_inactive #545454 #2d2d2d #D9D9D9
+#client.urgent #51c4d4 #ecedee #51c4d4
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -180,12 +203,34 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# colors
+client.focused #d64937 #d64937 #1f1f1f
+client.unfocused #545454 #2d2d2d #D9D9D9
+client.focused_inactive #545454 #2d2d2d #D9D9D9
+client.urgent #51c4d4 #ecedee #51c4d4
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-#bar {
-        #status_command i3status
-        #i3bar_command $HOME/bin/polybar -r main
-#}
+
+bar {
+    status_command i3status --config $HOME/.config/i3/status
+    output primary
+    position top
+    font pango:Source Code Pro 8
+    tray_output primary
+    separator_symbol "⋆"
+
+    colors {
+        background #454545
+        statusline #ffffff
+        separator #d64937 
+
+        focused_workspace  #d64937 #d64937 #ffffff
+        active_workspace   #d64937 #d64937 #ffffff
+        inactive_workspace #454545 #454545 #ffffff
+        urgent_workspace   #454545 #454545 #ffffff
+    }
+}
 
 assign [class="^Firefox$"] 2
 
@@ -196,17 +241,21 @@ bindsym $mod+b border toggle
 #for_window [class="^.*"] border pixel 1
 for_window [class="^.*"] border normal
 for_window [class="Firefox"] border none
+for_window [class="Chromium-browser"] border none
+
+for_window [class="albert"] border pixel 1
 for_window [class="Pavucontrol"] floating enable
 for_window [class="albert"] floating enable
+for_window [class="Thunar"] floating enable
 
 #for_window [class="Firefox"] border none
 #for_window [class="Telegram"] border none
 #for_window [class="Alacritty"] border none
 
-exec_always --no-startup-id $HOME/bin/polybar.sh
+#exec_always --no-startup-id $HOME/bin/polybar.sh
 exec_always --no-startup-id $HOME/bin/albert.sh
 exec_always --no-startup-id feh --bg-fill $HOME/doc/pictures/wallpapers/w.png
-exec --no-startup-id compton -b
+#exec --no-startup-id compton -b
 exec --no-startup-id start-pulseaudio-x11
 exec --no-startup-id nm-applet --sm-disable & disown
 exec --no-startup-id /usr/bin/volumeicon & dishow
