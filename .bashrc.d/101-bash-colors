@@ -1,23 +1,6 @@
-
-#COLORSCHEME=solarized-dark
-#COLORSCHEME=dracula
 COLORSCHEME=monokai
-
-if [ ! -z "$COLORSCHEME" ] && [ ! -f $HOME/.bash_colors/$COLORSCHEME ]; then
-    wget \
-        --quiet \
-        --output-document $HOME/.bash_colors/${COLORSCHEME} \
-        https://raw.githubusercontent.com/chriskempson/base16-shell/master/scripts/base16-${COLORSCHEME}.sh 
-fi
 
 if [ ! -z "$COLORSCHEME" ] && [ -f $HOME/.bash_colors/$COLORSCHEME ]; then
     . $HOME/.bash_colors/$COLORSCHEME
 fi
 
-#
-# https://github.com/chriskempson/base16-shell
-#
-#BASE16_SHELL=$HOME/.config/base16-shell/
-#if [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ]; then
-#    eval "$($BASE16_SHELL/profile_helper.sh)"
-#fi
