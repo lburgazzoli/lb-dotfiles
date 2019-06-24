@@ -35,7 +35,8 @@ floating_modifier $mod
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 #bindsym $mod+Return exec alacritty
-bindsym $mod+Return exec xfce4-terminal
+#bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+Return exec tilix
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -137,15 +138,15 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 bindsym $mod+Ctrl+Left workspace next
 bindsym $mod+Ctrl+Right workspace prev
 
-#bindsym XF86MonBrightnessUp exec /usr/bin/xbacklight -inc 10
-#bindsym XF86MonBrightnessDown exec /usr/bin/xbacklight -dec 5
+bindsym XF86MonBrightnessUp exec light -A 5;
+bindsym XF86MonBrightnessDown exec light -U 5;
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? ' -B 'Yes, exit i3' 'i3-msg exit'"
 
 client.focused #d64937 #d64937 #1f1f1f
 client.unfocused #545454 #2d2d2d #D9D9D9
@@ -193,9 +194,10 @@ new_window normal
 #hide_edge_borders vertical
 bindsym $mod+b border toggle
 #for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border normal
 for_window [class="Firefox"] border none
-#for_window [class="Code"] border noraml
-for_window [title="Volume Control"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="albert"] floating enable
 
 #for_window [class="Firefox"] border none
 #for_window [class="Telegram"] border none
