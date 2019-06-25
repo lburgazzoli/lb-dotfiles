@@ -66,7 +66,7 @@ bindsym $mod+Shift+q kill
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -fn 'Source Code Pro-10' -nb '#454545' -nf '#DCDCDC' -sf '#d64937' -sb '#454545'  -i"
 
 bindsym $mod+F2 exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/i3/rofi.rasi -font "Source Code Pro 8" -show run
 bindsym $mod+Tab exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/i3/rofi.rasi -font "Source Code Pro 8" -show window
