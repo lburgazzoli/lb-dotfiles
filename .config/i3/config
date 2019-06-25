@@ -70,6 +70,8 @@ bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 
 bindsym $mod+F2 exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/i3/rofi.rasi -font "Source Code Pro 8" -show run
 bindsym $mod+Tab exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/i3/rofi.rasi -font "Source Code Pro 8" -show window
+bindsym Print exec xfce4-screenshooter
+bindsym Ctrl+Print exec xfce4-screenshooter -f
 
 # change focus
 bindsym $mod+j focus left
