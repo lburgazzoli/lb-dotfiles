@@ -102,6 +102,7 @@ label-mode-background = ${colors.primary}
 
 ; focused = Active workspace on focused monitor
 label-focused = %index%
+label-focused-foreground = ${self.label-focused-underline}
 label-focused-background = ${colors.background}
 label-focused-underline= ${colors.red}
 label-focused-padding = 2
