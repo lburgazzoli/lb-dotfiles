@@ -256,7 +256,7 @@ for_window [class="Arandr"] floating enable
 #for_window [class="Alacritty"] border none
 
 exec_always --no-startup-id feh --bg-fill $HOME/doc/pictures/wallpapers/w.png
-exec_always --no-startup-id compton 
+#exec_always --no-startup-id compton 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh 
 exec --no-startup-id start-pulseaudio-x11
 exec --no-startup-id nm-applet --sm-disable & disown
