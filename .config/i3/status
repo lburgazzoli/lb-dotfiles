@@ -9,7 +9,7 @@ order += "battery 0"
 order += "battery 1"
 
 time {
-    format = "%d/%m/%y %H:%M:%S"
+    format = "%d/%m/%y %H:%M"
 }
 
 battery 0 {
