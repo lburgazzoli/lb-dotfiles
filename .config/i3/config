@@ -212,25 +212,25 @@ client.urgent #51c4d4 #ecedee #51c4d4
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 
-bar {
-    status_command i3status --config $HOME/.config/i3/status
-    output primary
-    position top
-    font pango:Source Code Pro 8
-    tray_output primary
-    separator_symbol "⋆"
-
-    colors {
-        background #454545
-        statusline #ffffff
-        separator #d64937 
-
-        focused_workspace  #d64937 #d64937 #ffffff
-        active_workspace   #d64937 #d64937 #ffffff
-        inactive_workspace #454545 #454545 #ffffff
-        urgent_workspace   #454545 #454545 #ffffff
-    }
-}
+#bar {
+#    status_command i3status --config $HOME/.config/i3/status
+#    output primary
+#    position top
+#    font pango:Source Code Pro 8
+#    tray_output primary
+#    separator_symbol "⋆"
+#
+#    colors {
+#        background #454545
+#        statusline #ffffff
+#        separator #d64937 
+#
+#        focused_workspace  #d64937 #d64937 #ffffff
+#        active_workspace   #d64937 #d64937 #ffffff
+#        inactive_workspace #454545 #454545 #ffffff
+#        urgent_workspace   #454545 #454545 #ffffff
+#    }
+#}
 
 assign [class="^Firefox$"] 2
 
@@ -255,6 +255,7 @@ for_window [class="Arandr"] floating enable
 
 exec_always --no-startup-id feh --bg-fill $HOME/doc/pictures/wallpapers/w.png
 exec_always --no-startup-id compton 
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh 
 exec --no-startup-id start-pulseaudio-x11
 exec --no-startup-id nm-applet --sm-disable & disown
 exec --no-startup-id /usr/bin/volumeicon & dishow
