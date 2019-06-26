@@ -55,9 +55,6 @@ floating_modifier $mod
 bindsym $mod+Return exec xfce4-terminal
 #bindsym $mod+Return exec tilix
 
-bindsym Ctrl+Shift+d split v, exec tilix
-bindsym Ctrl+Shift+r split h, exec tilix
-
 # kill focused window
 bindsym $mod+Shift+q kill
 
