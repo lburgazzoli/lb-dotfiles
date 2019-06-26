@@ -1,0 +1,31 @@
+export WTF_HOME=${LB_SFW_TOOLS_HOME}/wtf
+
+if [ -d $WTF_HOME ]; then
+    pathadd $WTF_HOME
+fi
+
+function get-wtf {
+    REPO_OWNER="wtfutil"
+    REPO_NAME="wtf"
+    BINARY_NAME="linux_amd64.tar.gz"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/wtf"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            --strip-components=1
+
+    pathadd ${BINARY_PATH}
+}
