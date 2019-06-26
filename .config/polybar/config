@@ -56,7 +56,7 @@ font-3 = siji:pixelsize=10;1
 
 modules-left = i3 bspwm 
 modules-center = xwindow
-modules-right =  cpu battery0 battery1 date
+modules-right = battery0 battery1 date
 
 tray-position = right
 tray-padding = 2
