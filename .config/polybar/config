@@ -56,7 +56,7 @@ font-3 = siji:pixelsize=10;1
 
 modules-left = i3 bspwm 
 modules-center = xwindow
-modules-right = battery0 battery1 date
+modules-right = battery-combined-udev date
 
 tray-position = right
 tray-padding = 2
@@ -147,6 +147,11 @@ time-alt = %H:%M:%S
 format-prefix-foreground = ${colors.foreground-alt}
 label =  %date% %time%
 
+[module/battery-combined-udev]
+type = custom/script
+exec = ~/.config/polybar/battery-combined-udev.sh
+tail = true
+
 [module/battery0]
 type = internal/battery
 battery = BAT0
@@ -154,9 +159,7 @@ adapter = AC
 full-at = 98
 
 format-charging = <ramp-capacity> <label-charging>
-format-charging-underline = #ffb52a
 format-discharging = <ramp-capacity> <label-discharging>
-format-discharging-underline = ${self.format-charging-underline}
 
 format-full-prefix = " "
 format-full-prefix-foreground = ${colors.foreground-alt}
@@ -174,9 +177,7 @@ adapter = AC
 full-at = 98
 
 format-charging = <ramp-capacity> <label-charging>
-format-charging-underline = #ffb52a
 format-discharging = <ramp-capacity> <label-discharging>
-format-discharging-underline = ${self.format-charging-underline}
 format-full-prefix = " "
 format-full-prefix-foreground = ${colors.foreground-alt}
 
@@ -185,7 +186,6 @@ ramp-capacity-1 = 
 ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
-
 
 [module/cpu]
 type = internal/cpu
