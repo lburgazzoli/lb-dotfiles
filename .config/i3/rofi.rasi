@@ -38,7 +38,7 @@
 #window {
     background-color: @background;
     border:           1;
-    padding:          5;
+    padding:          1;
 }
 #mainbox {
     border:  0;
@@ -54,11 +54,11 @@
 }
 #listview {
     fixed-height: 0;
-    border:       2px solid 0px 0px ;
+    border:       1px solid 0px 0px ;
     border-color: @separatorcolor;
-    spacing:      2px ;
-    scrollbar:    true;
-    padding:      2px 0px 0px ;
+    spacing:      1px ;
+    scrollbar:    false;
+    padding:      1px 0px 0px ;
 }
 #element {
     border:  0;
@@ -89,16 +89,16 @@
     text-color:       @selected-active-foreground;
 }
 #element.alternate.normal {
-    background-color: @alternate-normal-background;
-    text-color:       @alternate-normal-foreground;
+    background-color: @normal-background;
+    text-color:       @normal-foreground;
 }
 #element.alternate.urgent {
-    background-color: @alternate-urgent-background;
-    text-color:       @alternate-urgent-foreground;
+    background-color: @urgent-background;
+    text-color:       @urgent-foreground;
 }
 #element.alternate.active {
-    background-color: @alternate-active-background;
-    text-color:       @alternate-active-foreground;
+    background-color: @active-background;
+    text-color:       @active-foreground;
 }
 #scrollbar {
     width:        4px ;
