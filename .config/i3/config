@@ -252,6 +252,8 @@ client.urgent           #51c4d4 #ecedee #51c4d4 #51c4d4
 #####################################################################
 
 assign [class="^Firefox$"] 2
+assign [class="^Telegram$"] 3
+assign [class="^Zulip$"] 3
 
 # border / titlebar
 new_window normal
