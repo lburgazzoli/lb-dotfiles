@@ -270,6 +270,7 @@ for_window [class="albert"] floating enable
 for_window [class="Thunar"] floating enable
 for_window [class="Arandr"] floating enable
 for_window [class="Lightdm-settings"] floating enable
+for_window [class="JetBrains Toolbo"] floating enable
 
 #for_window [class="Firefox"] border none
 #for_window [class="Telegram"] border none
