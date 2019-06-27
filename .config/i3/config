@@ -43,9 +43,6 @@ set $base0D #66d9ef
 set $base0E #ae81ff
 set $base0F #cc6633
 
-# i3locker
-bindsym $mod+Ctrl+l exec i3lock -i $HOME/doc/pictures/wallpapers/w.png
-
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -167,15 +164,15 @@ bindsym XF86MonBrightnessDown exec light -U 5;
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? ' -B 'Yes, exit i3' 'i3-msg exit'"
 
-#client.focused #d64937 #d64937 #1f1f1f
-#client.unfocused #545454 #2d2d2d #D9D9D9
-#client.focused_inactive #545454 #2d2d2d #D9D9D9
-#client.urgent #51c4d4 #ecedee #51c4d4
-
+#####################################################################
+#
+#
 # resize window (you can also use the mouse for that)
+#
+#
+#####################################################################
+
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
 
@@ -202,6 +199,43 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+#####################################################################
+#
+#
+# lock, logout, suspend, hibernate, reboot, shutdown
+#
+#
+#####################################################################
+
+# i3locker
+#bindsym $mod+Ctrl+l exec i3lock -i $HOME/doc/pictures/wallpapers/w.png
+# exit i3 (logs you out of your X session)
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? ' -B 'Yes, exit i3' 'i3-msg exit'"
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $HOME/.config/i3/i3-exit.sh lock, mode "default"
+    bindsym e exec --no-startup-id $HOME/.config/i3/i3-exit.sh logout, mode "default"
+    bindsym s exec --no-startup-id $HOME/.config/i3/i3-exit.sh suspend, mode "default"
+    bindsym h exec --no-startup-id $HOME/.config/i3/i3-exit.sh hibernate, mode "default"
+    bindsym r exec --no-startup-id $HOME/.config/i3/i3-exit.sh reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id $HOME/.config/i3/i3-exit.sh shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+Delete mode "$mode_system"
+
+#####################################################################
+#
+#
+# decorations
+#
+#
+#####################################################################
+
 # class                 border  backgr. text    indicator child_border
 client.focused          #d64937 #d64937 #1f1f1f #d64937
 client.unfocused        #545454 #2d2d2d #D9D9D9 #545454
@@ -209,28 +243,13 @@ client.focused_inactive #545454 #2d2d2d #D9D9D9 #545454
 client.urgent           #51c4d4 #ecedee #51c4d4 #51c4d4
 #client.background       #51c4d4
 
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-
-#bar {
-#    status_command i3status --config $HOME/.config/i3/status
-#    output primary
-#    position top
-#    font pango:Source Code Pro 8
-#    tray_output primary
-#    separator_symbol "⋆"
+#####################################################################
 #
-#    colors {
-#        background #454545
-#        statusline #ffffff
-#        separator #d64937 
 #
-#        focused_workspace  #d64937 #d64937 #ffffff
-#        active_workspace   #d64937 #d64937 #ffffff
-#        inactive_workspace #454545 #454545 #ffffff
-#        urgent_workspace   #454545 #454545 #ffffff
-#    }
-#}
+# windows
+#
+#
+#####################################################################
 
 assign [class="^Firefox$"] 2
 
@@ -253,6 +272,14 @@ for_window [class="Lightdm-settings"] floating enable
 #for_window [class="Firefox"] border none
 #for_window [class="Telegram"] border none
 #for_window [class="Alacritty"] border none
+
+#####################################################################
+#
+#
+# startup
+#
+#
+#####################################################################
 
 exec_always --no-startup-id feh --bg-fill $HOME/doc/pictures/wallpapers/w.png
 #exec_always --no-startup-id compton 
