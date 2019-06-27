@@ -149,43 +149,43 @@ label =  %date% %time%
 
 [module/battery-combined-udev]
 type = custom/script
-exec = ~/.config/polybar/battery-combined-udev.sh
+exec = $HOME/.config/polybar/battery-combined-udev.sh
 tail = true
 
-[module/battery0]
-type = internal/battery
-battery = BAT0
-adapter = AC
-full-at = 98
+; [module/battery0]
+; type = internal/battery
+; battery = BAT0
+; adapter = AC
+; full-at = 98
 
-format-charging = <ramp-capacity> <label-charging>
-format-discharging = <ramp-capacity> <label-discharging>
+; format-charging = <ramp-capacity> <label-charging>
+; format-discharging = <ramp-capacity> <label-discharging>
 
-format-full-prefix = " "
-format-full-prefix-foreground = ${colors.foreground-alt}
+; format-full-prefix = " "
+; format-full-prefix-foreground = ${colors.foreground-alt}
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+; ramp-capacity-0 = 
+; ramp-capacity-1 = 
+; ramp-capacity-2 = 
+; ramp-capacity-3 = 
+; ramp-capacity-4 = 
 
-[module/battery1]
-type = internal/battery
-battery = BAT1
-adapter = AC
-full-at = 98
+; [module/battery1]
+; type = internal/battery
+; battery = BAT1
+; adapter = AC
+; full-at = 98
 
-format-charging = <ramp-capacity> <label-charging>
-format-discharging = <ramp-capacity> <label-discharging>
-format-full-prefix = " "
-format-full-prefix-foreground = ${colors.foreground-alt}
+; format-charging = <ramp-capacity> <label-charging>
+; format-discharging = <ramp-capacity> <label-discharging>
+; format-full-prefix = " "
+; format-full-prefix-foreground = ${colors.foreground-alt}
 
-ramp-capacity-0 = 
-ramp-capacity-1 = 
-ramp-capacity-2 = 
-ramp-capacity-3 = 
-ramp-capacity-4 = 
+; ramp-capacity-0 = 
+; ramp-capacity-1 = 
+; ramp-capacity-2 = 
+; ramp-capacity-3 = 
+; ramp-capacity-4 = 
 
 [module/cpu]
 type = internal/cpu

@@ -50,7 +50,7 @@ battery_print() {
             icon=""
         elif [ "$battery_percent" -gt 50 ]; then
             icon=""
-        elif [ "$battery_percent" -gt 52 ]; then
+        elif [ "$battery_percent" -gt 25 ]; then
             icon=""
         else
             icon=""
