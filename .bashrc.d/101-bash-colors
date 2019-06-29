@@ -1,4 +1,4 @@
-COLORSCHEME=monokai
+#COLORSCHEME=monokai
 
 if [ ! -z "$COLORSCHEME" ] && [ -f $HOME/.bash_colors/$COLORSCHEME ]; then
     . $HOME/.bash_colors/$COLORSCHEME
