@@ -1,7 +1,7 @@
 #!/bin/sh
 
 lock() {
-    i3lock -i $HOME/doc/pictures/wallpapers/numix-doctor-r.png
+    i3lock -i $HOME/.config/i3/w-lock-1920x1080.png
 }
 
 case "$1" in
