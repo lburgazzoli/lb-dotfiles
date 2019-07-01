@@ -1,7 +1,7 @@
 
 # syndesis defaults
 export SYNDESIS_NAMESPACE=syndesis
-export SYNDESIS_WKS=$HOME/work/redhat/dev/syndesis
+export SYNDESIS_WKS=$HOME/work/redhat/dev/syndesis-go/src/github.com/syndesisio/syndesis
 
 if [ -f ${SYNDESIS_WKS}/tools/bin/syndesis ]; then
     # add to path
