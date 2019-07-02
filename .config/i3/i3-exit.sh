@@ -1,7 +1,7 @@
 #!/bin/sh
 
 lock() {
-    i3lock -i $HOME/.config/i3/w-lock-1920x1080.png
+    i3lock -i $HOME/.config/i3/w-lock-${HOSTNAME}.png
 }
 
 case "$1" in
