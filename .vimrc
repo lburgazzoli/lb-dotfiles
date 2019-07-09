@@ -46,6 +46,7 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'w0rp/ale'
+Plug 'direnv/direnv.vim'
 "Plug 'scrooloose/syntastic'
 "Plug 'dracula/vim'
 
