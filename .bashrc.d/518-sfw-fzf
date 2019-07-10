@@ -1,7 +1,33 @@
 
 if hash fzf 2> /dev/null; then
-    alias preview="fzf --preview 'bat --color \"always\" {}'"
     # add support for ctrl+o to open selected file in VS Code
     export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(code {})+abort'"
+
+    if [ -f /usr/share/bash-completion/completions/fzf ]; then
+        source /usr/share/bash-completion/completions/fzf
+    fi
+
+    if [ -f /usr/share/fzf/shell/key-bindings.bash ]; then
+        source /usr/share/fzf/shell/key-bindings.bash
+    fi
+
+    if hash bat 2> /dev/null; then
+        alias preview="fzf --preview 'bat --color \"always\" {}'"
+        export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=header,grid --line-range :300 {}'"
+    fi
+
+    if hash fd 2> /dev/null; then
+        export FZF_DEFAULT_COMMAND='fd --type f --color always'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+        _fzf_compgen_path() {
+            fd --hidden --follow --exclude ".git" . "$1"
+        }
+
+        _fzf_compgen_dir() {
+            fd --type d --hidden --follow --exclude ".git" . "$1"
+        }
+    fi
+
 fi
 
