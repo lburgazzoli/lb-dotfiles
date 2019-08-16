@@ -1,20 +1,8 @@
-
-################################################################################
-#
-# OPENSHIFT
-#
-################################################################################
-
-
 if [ -d ${LB_SFW_TOOLS_HOME}/minishift/bin ]; then
     pathadd ${LB_SFW_TOOLS_HOME}/minishift/bin
 
     if hash minishift 2>/dev/null; then
         source <(minishift completion bash)
-    fi
-
-    if hash oc 2>/dev/null; then
-        source <(oc completion bash)
     fi
 fi
 
@@ -40,12 +28,8 @@ function get-operator-sdk {
     fi
 }
 
-
 function minishift-env {
     MINISHIFT_IP="$(minishift ip)"
-    #export KUBERNETES_DOMAIN="${MINISHIFT_IP}.nip.io"
-    #export KUBERNETES_MASTER="https://${MINISHIFT_IP}:8443"
-    #export OPENSHIFT_MASTER="https://${MINISHIFT_IP}:8443"
     eval $(minishift docker-env)
     eval $(minishift oc-env)
 
@@ -71,28 +55,6 @@ function minishift-login {
         "$@"
 }
 
-function minishift-login-syndesis {
-    #oc config set-context "$profile" --namespace="$project"
-    oc config set-context syndesis --namespace=syndesis
-    
-    minishift-login --namespace=syndesis
-}
-
-function minishift-login-syndesis-adm {
-    #oc config set-context "$profile" --namespace="$project"
-    oc config set-context syndesis --namespace=syndesis
-    
-    minishift-login-adm --namespace=syndesis
-}
-
-function minishift-drop {
-    sudo iptables -A OUTPUT -p tcp -m tcp --dport 8443 -j DROP
-}
-
-function minishift-allow {
-    sudo iptables -D OUTPUT -p tcp -m tcp --dport 8443 -j DROP
-}
-
 function minishift-setup-ko {
     eval $(minishift docker-env)
     export K8S_CLUSTER_OVERRIDE=$(minishift ip | sed -e 's/\./\-/g'):8443
@@ -100,27 +62,4 @@ function minishift-setup-ko {
     export KO_DOCKER_REPO='ko.local'
     export DOCKER_REPO_OVERRIDE="${KO_DOCKER_REPO}"
 }
-
-
-function oc-expose {
-    if [ "$#" -eq 1 ]; then
-        oc expose service $1 --hostname="${1}.$(minishift ip).nip.io"
-    fi
-}
-
-function oc-unexpose {
-    if [ "$#" -eq 1 ]; then
-        oc delete route $1
-    fi
-}
-
-function oc-port-forward {
-    oc port-forward $(oc get pods | grep -i "Running" | awk '{ print $1 }' | grep $1) $2:$2
-}
-
-function oc-port-forward-pg {
-    oc-port-forward $1 5432
-}
-
-
 
