@@ -1,5 +1,11 @@
 
-
 if hash oc 2>/dev/null; then
     source <(oc completion bash)
 fi
+
+function ocp-mw-fusit {
+    pathadd $LB_SFW_TOOLS_HOME/ocp4
+
+    export KUBECONFIG=~/.kube_config/fusit
+}
+
