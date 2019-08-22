@@ -3,6 +3,8 @@
 # Camel K
 ####################################################################
 
+pathadd ${LB_SFW_TOOLS_HOME}/camel-k
+
 function ck-minikube-setup {
     minikube profile camel-k
     minikube config set kubernetes-version v1.12.0
@@ -13,7 +15,6 @@ function ck-minikube-setup {
 }
 
 function ck-minikube-start {
-
     ck-minikube-setup
 
     minikube start \
