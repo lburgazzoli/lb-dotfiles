@@ -37,7 +37,7 @@ function get-minikube {
     else
         URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
             | jq --raw-output \
-                ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
     fi
 
     if [ ! -d ${BINARY_PATH} ]; then
