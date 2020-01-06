@@ -8,23 +8,17 @@ else
     export JAVA_VERSION_MAJOR=8
     export JAVA_VERSION="${JAVA_VERSION_MAJOR}"
 
-    if [ -d ${LB_SFW_LANG_HOME}/java/jdk-${JAVA_VERSION_MAJOR} ]; then
-        # Prefer Oracle JDK over OpenJDK as OpenJDK does not yet
-        # support i.e JFR/MissionControl
-        export JAVA_HOME=${LB_SFW_LANG_HOME}/java/jdk-${JAVA_VERSION_MAJOR}
-        export IDEA_JDK=${JAVA_HOME}
-    else
-        export JAVA_HOME=${LB_SFW_LANG_HOME}/java/${JAVA_VERSION_MAJOR}
-        export IDEA_JDK=$JAVA_HOME
-    fi
+    export JAVA_HOME=${LB_SFW_LANG_HOME}/java/${JAVA_VERSION_MAJOR}
+    export IDEA_JDK=$JAVA_HOME
 
     if [ -d ${JAVA_HOME} ]; then
         pathadd ${JAVA_HOME}/bin
     fi
 
-    if [ -d ${LB_SFW_LANG_HOME}/java/graalvm ]; then
-        export GRAALVM_HOME=${LB_SFW_LANG_HOME}/java/graalvm
-    fi
+fi
+
+if [ -d ${LB_SFW_LANG_HOME}/java/8-graal ]; then
+    export GRAALVM_HOME=${LB_SFW_LANG_HOME}/java/8-graal
 fi
 
 if [ ! -e /tmp/java-${LOGNAME} ]; then
