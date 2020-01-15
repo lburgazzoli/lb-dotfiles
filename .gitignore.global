@@ -17,3 +17,5 @@ dive.log
 # TODO: remove
 .golangci.yml
 
+.kamel/
+
