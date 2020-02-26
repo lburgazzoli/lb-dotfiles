@@ -92,21 +92,6 @@ function get-minishift {
     chmod u+x ${BINARY_PATH}/minishift
 }
 
-function get-go {
-    if [ -d ${GO_BASE}/${GO_VERSION} ]; then
-        rm -rf ${GO_BASE}/${GO_VERSION}
-    fi
-
-    if [ ! -d ${GO_BASE}/${GO_VERSION} ]; then
-        mkdir -p ${GO_BASE}/${GO_VERSION}
-    fi
-
-    curl https://storage.googleapis.com/golang/go${GO_VERSION}.linux-amd64.tar.gz\
-        | tar -xzf - \
-            --directory ${GO_BASE}/${GO_VERSION} \
-            --strip-components=1
-}
-
 function get-rust {
     if [ ! -d $RUST_HOME ]; then
         mkdir -p $RUST_HOME

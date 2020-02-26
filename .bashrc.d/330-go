@@ -9,7 +9,7 @@ if [ ${LB_OS_NAME} == "darwin" ]; then
     pathadd ${GOPATH}/bin
     pathadd ${GOROOT}/bin
 else
-    export GO_VERSION=1.13.7
+    export GO_VERSION=1.13.8
     #export GO_VERSION=1.12.12
     export GO_BASE=${LB_SFW_LANG_HOME}/go
     export GO_HOME=${GO_BASE}/${GO_VERSION}
@@ -23,4 +23,24 @@ else
         pathadd ${GOPATH}/bin
     fi
 fi
+
+function get-go {
+    local gv=${GO_VERSION}
+    if [ $# -eq 1 ]; then 
+        gv=$1   
+    fi
+
+    if [ -d ${GO_BASE}/${gv} ]; then
+        rm -rf ${GO_BASE}/${gv}
+    fi
+
+    if [ ! -d ${GO_BASE}/${gv} ]; then
+        mkdir -p ${GO_BASE}/${gv}
+    fi
+
+    curl https://storage.googleapis.com/golang/go${gv}.linux-amd64.tar.gz\
+        | tar -xzf - \
+            --directory ${GO_BASE}/${gv} \
+            --strip-components=1
+}
 
