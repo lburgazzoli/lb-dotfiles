@@ -293,7 +293,7 @@ function nexus {
     docker run \
         --rm \
         --detach \
-        --publish 8081:8081 \
+        --publish 8989:8081 \
         --volume /opt/data/cache/nexus:/nexus-data:Z \
         --name nexus \
         sonatype/nexus3
