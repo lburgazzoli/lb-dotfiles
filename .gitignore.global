@@ -18,4 +18,5 @@ dive.log
 .golangci.yml
 
 .kamel/
+.kube/
 

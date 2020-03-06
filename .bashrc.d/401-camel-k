@@ -7,7 +7,6 @@ pathadd ${LB_SFW_TOOLS_HOME}/camel-k
 
 function ck-minikube-setup {
     minikube profile camel-k
-    minikube config set kubernetes-version v1.12.0
     minikube config set memory 16384
     minikube config set cpus 4
     minikube config set disk-size 40g
