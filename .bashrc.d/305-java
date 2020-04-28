@@ -82,9 +82,14 @@ function mdeploy {
     _mvn_cmd \
         deploy \
         -DskipTests=true \
-        -DaltSnapshotDeploymentRepository=nexus-shared::default::http://localhost:8989/repository/maven-snapshots/ \
-        -DaltDeploymentRepository=nexus-shared::default::http://localhost:8989/repository/maven-snapshots/ \
+        -DaltSnapshotDeploymentRepository=lb-nexus::default::http://192.168.178.10:9081/repository/maven-snapshots/ \
+        -DaltDeploymentRepository=lb-nexus::default::http://192.168.178.10:9081/repository/maven-snapshots/ \
         "$@"
+}
+
+function mdeps-list {
+    _mvn_cmd \
+        dependency:list | sed -ne s/..........// -e /patterntoexclude/d -e s/:compile//p -e s/:runtime//p | sort | uniq 
 }
 
 ####################################################################
@@ -101,4 +106,5 @@ if [ -c /dev/urandom ]; then
 fi
 
 export JAVA_OPTS
+export MVN_PROFILE=lb
 
