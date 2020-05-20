@@ -1,7 +1,7 @@
 #!/bin/sh
 
 lock() {
-    i3lock -i $HOME/doc/pictures/wallpapers/numix-doctor-r.png
+    swaylock -i $HOME/doc/pictures/wallpapers/numix-doctor-r.png
 }
 
 case "$1" in
@@ -9,7 +9,7 @@ case "$1" in
         lock
         ;;
     logout)
-        i3-msg exit
+        swaymsg exit
         ;;
     suspend)
         lock && dbus-send \
