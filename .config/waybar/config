@@ -30,7 +30,7 @@
         "format": "<span style=\"italic\">{}</span>"
     },
     "tray": {
-        // "icon-size": 21,
+        "icon-size": 21,
         "spacing":2 
     },
     "clock": {
