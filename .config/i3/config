@@ -330,6 +330,7 @@ for_window [class="JetBrains Toolbo"] floating enable
 
 exec_always --no-startup-id feh --bg-fill $HOME/.config/i3/w.png
 exec_always --no-startup-id xfce4-clipman
+exec_always --no-startup-id blueman-applet
 exec_always --no-startup-id compton 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh 
 exec --no-startup-id start-pulseaudio-x11

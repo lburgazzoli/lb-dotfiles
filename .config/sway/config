@@ -3,32 +3,11 @@ input "1:1:AT_Translated_Set_2_keyboard" {
     xkb_layout it
 }
 
-
-# Default config for sway
-#
-# Copy this to ~/.config/sway/config and edit it to your liking.
-#
-# Read `man 5 sway` for a complete reference.
-
-### Variables
-#
-# Logo key. Use Mod1 for Alt.
 set $mod Mod4
-# Home row direction keys, like vim
-set $left h
-set $down j
-set $up k
-set $right l
-# Your preferred terminal emulator
-#set $term urxvt256c-ml
-set $term xfce4-terminal
-# Your preferred application launcher
-# Note: it's recommended that you pass the final command to sway
+
+set $term alacritty
 set $menu dmenu_path | dmenu | xargs swaymsg exec --
 
-### Output configuration
-#
-# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 output * bg $HOME/.config/i3/w.png fill
 #
 # Example configuration:
@@ -36,8 +15,6 @@ output * bg $HOME/.config/i3/w.png fill
 #   output HDMI-A-1 resolution 1920x1080 position 1920,0
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs
-
-### Idle configuration
 #
 # Example configuration:
 #
@@ -50,8 +27,6 @@ output * bg $HOME/.config/i3/w.png fill
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
 # resumed. It will also lock your screen before your computer goes to sleep.
-
-### Input configuration
 #
 # Example configuration:
 #
@@ -75,8 +50,11 @@ output * bg $HOME/.config/i3/w.png fill
     # kill focused window
     bindsym $mod+Shift+q kill
 
-    # start your launcher
-    bindsym $mod+d exec $menu
+    # start your launcher  
+    bindsym $mod+d exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/sway/rofi.rasi -font "Source Code Pro 8" -show drun
+    bindsym $mod+F2 exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/sway/rofi.rasi -font "Source Code Pro 8" -fullscreen -show run
+    bindsym $mod+Tab exec --no-startup-id rofi -monitor -1 -theme $HOME/.config/sway/rofi.rasi -font "Source Code Pro 8" -fullscreen -show window
+
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -94,22 +72,12 @@ output * bg $HOME/.config/i3/w.png fill
 #
 # Moving around:
 #
-    # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
     # or use $mod+[up|down|left|right]
     bindsym $mod+Left focus left
     bindsym $mod+Down focus down
     bindsym $mod+Up focus up
     bindsym $mod+Right focus right
 
-    # _move_ the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
     # ditto, with arrow keys
     bindsym $mod+Shift+Left move left
     bindsym $mod+Shift+Down move down
@@ -148,7 +116,7 @@ output * bg $HOME/.config/i3/w.png fill
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
-    bindsym $mod+b splith
+    bindsym $mod+h splith
     bindsym $mod+v splitv
 
     # Switch the current container between different layout styles
@@ -183,15 +151,6 @@ output * bg $HOME/.config/i3/w.png fill
 # Resizing containers:
 #
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
-
     # ditto, with arrow keys
     bindsym Left resize shrink width 10px
     bindsym Down resize grow height 10px
@@ -203,24 +162,6 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
-
-#
-# Status Bar:
-#
-# Read `man 5 sway-bar` for more information about this section.
-#bar {
-#    position top
-#
-#    # When the status_command prints a new line to stdout, swaybar updates.
-#    # The default just shows the current date and time.
-#    status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
-#
-#    colors {
-#        statusline #ffffff
-#        background #323232
-#        inactive_workspace #32323200 #32323200 #5c5c5c
-#    }
-#}
 
 bar {
     swaybar_command waybar
@@ -234,10 +175,81 @@ bar {
 #
 #####################################################################
 
-exec_always --no-startup-id xfce4-clipman
-exec --no-startup-id start-pulseaudio-x11
-exec --no-startup-id nm-applet --sm-disable & disown
-exec --no-startup-id /usr/bin/volumeicon & dishow
+#exec_always --no-startup-id xfce4-clipman
+#exec --no-startup-id start-pulseaudio-x11
+#exec --no-startup-id nm-applet --sm-disable & disown
+#exec --no-startup-id /usr/bin/volumeicon & dishow
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 
 include /etc/sway/config.d/*
+
+#####################################################################
+#
+#
+# decorations
+#
+#
+#####################################################################
+
+# class                 border  backgr. text    indicator child_border
+client.focused          #d64937 #d64937 #1f1f1f #d64937
+client.unfocused        #545454 #2d2d2d #D9D9D9 #545454
+client.focused_inactive #545454 #2d2d2d #D9D9D9 #545454 
+client.urgent           #51c4d4 #ecedee #51c4d4 #51c4d4
+
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') +5% 
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') -5%
+bindsym XF86AudioMute exec pactl set-sink-mute  $(pacmd list-sinks |awk '/* index:/{print $3}') toggle
+
+# Sreen brightness controls
+bindsym XF86MonBrightnessUp exec light -A 5  
+bindsym XF86MonBrightnessDown exec light -U 5
+
+bindsym $mod+b border toggle
+
+titlebar_border_thickness 0
+titlebar_padding 0
+hide_edge_borders both
+
+font pango:Source Code Pro 8
+
+# border / titlebar
+default_border normal
+#for_window [class="^.*"] border pixel 1
+for_window [class="^.*"] border normal
+for_window [class="Firefox"] border none
+for_window [class="Chromium-browser"] border none
+
+for_window [class="albert"] border pixel 1
+for_window [class="Pavucontrol"] floating enable
+for_window [class="albert"] floating enable
+for_window [class="Thunar"] floating enable
+for_window [class="Arandr"] floating enable
+for_window [class="Peek"] floating enable
+for_window [class="Lightdm-settings"] floating enable
+for_window [class="JetBrains Toolbo"] floating enable
+
+#####################################################################
+#
+#
+# lock, logout, suspend, hibernate, reboot, shutdown
+#
+#
+#####################################################################
+
+set $mode_system System (l) lock, (e) logout, (s) suspend, (h) hibernate, (r) reboot, (Shift+s) shutdown
+
+mode "$mode_system" {
+    bindsym l exec --no-startup-id $HOME/.config/sway/sway-ctl.sh lock, mode "default"
+    bindsym e exec --no-startup-id $HOME/.config/sway/sway-ctl.sh logout, mode "default"
+    bindsym s exec --no-startup-id $HOME/.config/sway/sway-ctl.sh suspend, mode "default"
+    bindsym h exec --no-startup-id $HOME/.config/sway/sway-ctl.sh hibernate, mode "default"
+    bindsym r exec --no-startup-id $HOME/.config/sway/sway-ctl.sh reboot, mode "default"
+    bindsym Shift+s exec --no-startup-id $HOME/.config/i3/sway-ctl.sh shutdown, mode "default"
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+Delete mode "$mode_system"

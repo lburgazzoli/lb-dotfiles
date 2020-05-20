@@ -18,7 +18,7 @@
     lightbg:                     rgba ( 238, 232, 213, 100 % );
     selected-active-foreground:  @foreground;
     alternate-active-background: rgba ( 255, 255, 255, 7 % );
-    background:                  rgba ( 51, 51, 51, 93 % );
+    background:                  rgba ( 51, 51, 51, 100 % );
     bordercolor:                 rgba ( 235, 86, 77, 100 % );
     alternate-normal-foreground: @foreground;
     normal-background:           rgba ( 0, 0, 0, 0 % );
