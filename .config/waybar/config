@@ -9,12 +9,12 @@
         "sway/window"
     ],
     "modules-right": [
+        "tray",
         "pulseaudio", 
         "network", 
         "battery", 
         "battery#bat2", 
-        "clock", 
-        "tray"
+        "clock"
     ],
     "sway/workspaces": {
          "disable-scroll": true,

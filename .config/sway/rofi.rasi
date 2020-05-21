@@ -1,3 +1,10 @@
+configuration {
+ modi: "window,drun,ssh,combi,run";
+ combi-modi: "drun,ssh";
+ font: "Source Code Pro 9";
+ show-icons: true;
+}
+
 /**
  * ROFI Color theme
  * User: JT (adpated from lb by Qball)
