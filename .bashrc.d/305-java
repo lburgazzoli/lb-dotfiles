@@ -78,6 +78,10 @@ function mgoals {
     _mvn_cmd fr.jcgay.maven.plugins:buildplan-maven-plugin:list "$@"
 }
 
+function mqdeps {
+    _mvn_cmd quarkus-bootstrap:build-tree "$@"
+}
+
 function mdeploy {
     _mvn_cmd \
         deploy \
