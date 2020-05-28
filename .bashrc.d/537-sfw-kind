@@ -1,0 +1,42 @@
+##########################################
+#
+# KIND
+#
+##########################################
+
+export KIND_HOME=${LB_SFW_TOOLS_HOME}/kind
+
+if [ -d $KIND_HOME ]; then
+    pathadd $KIND_HOME/bin
+    manpathadd $KIND_HOME/share/man
+fi
+
+if [ -e ${LB_SFW_TOOLS_HOME}/kind/bin/kind ]; then
+    alias git='kind'
+elif [ -e /usr/local/bin/kind ]; then
+    alias git='kind'
+fi
+
+function get-kind {
+    REPO_OWNER="kubernetes-sigs"
+    REPO_NAME="kind"
+    BINARY_NAME="kind-linux-amd64"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/kind"
+
+   URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL --output ${BINARY_PATH}/kind
+    chmod u+x  ${BINARY_PATH}/kind
+
+    pathadd ${BINARY_PATH}
+}

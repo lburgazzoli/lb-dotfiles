@@ -12,6 +12,19 @@
 .vscode
 .envrc
 
+.DS_Store
+
+**/*.iml
+
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.iws
+*.ipr
+
+
 dive.log
 
 # TODO: remove
