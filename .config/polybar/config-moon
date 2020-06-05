@@ -227,8 +227,8 @@ line-color = #f00
 
 border-size = 0
 border-color = #454545
-border-bottom = 2
-border-top = 2
+border-bottom-size = 2
+border-top-size = 2
 
 underline-size = 2
 
@@ -243,7 +243,7 @@ font-1 = Source Code Pro:pixelsize=9;2
 font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = siji:pixelsize=10;1
 
-modules-left = i3 bspwm 
+modules-left = i3
 modules-center = xwindow
 modules-right = battery-combined-udev date separator
 
@@ -274,8 +274,8 @@ line-color = #f00
 
 border-size = 0
 border-color = #454545
-border-bottom = 2
-border-top = 2
+border-bottom-size = 2
+border-top-size = 2
 
 underline-size = 2
 
@@ -290,13 +290,14 @@ font-1 = Source Code Pro:pixelsize=9;2
 font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = siji:pixelsize=10;1
 
-modules-left = i3 bspwm
+modules-left = i3
 modules-center = xwindow
 modules-right = 
 
 cursor-click = pointer
 cursor-scroll = ns-resize
 
+tray-position = none
 
 ; ============================
 ;
@@ -334,9 +335,11 @@ font-1 = Source Code Pro:pixelsize=9;2
 font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = siji:pixelsize=10;1
 
-modules-left = i3 bspwm
+modules-left = i3
 modules-center = xwindow
 modules-right = 
 
 cursor-click = pointer
 cursor-scroll = ns-resize
+
+tray-position = none
