@@ -343,3 +343,49 @@ cursor-click = pointer
 cursor-scroll = ns-resize
 
 tray-position = none
+
+; ============================
+;
+; DP-2-1
+;
+; ============================
+
+[bar/DP-2-1]
+monitor = ${env:MONITOR:}
+width = 100%
+height = 24
+radius = 0.0
+fixed-center = true
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 1
+line-color = #f00
+
+border-size = 0
+border-color = #454545
+border-bottom = 2
+border-top = 2
+
+underline-size = 2
+
+padding-left = 0
+padding-right = 0
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = FontAwesome:size=9;2
+font-1 = Source Code Pro:pixelsize=9;2
+font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-3 = siji:pixelsize=10;1
+
+modules-left = i3
+modules-center = xwindow
+modules-right = 
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+tray-position = none
+
