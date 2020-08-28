@@ -51,9 +51,6 @@
         // "format-full": "",
         "format-icons": ["", "", "", "", ""]
     },
-    "battery#bat2": {
-        "bat": "BAT2"
-    },
     "network": {
         "format-wifi": "{essid} ",
         "format-ethernet": "{ifname} ",
@@ -77,6 +74,6 @@
             "car": "",
             "default": ["", "", ""]
         },
-        "on-click": "GTK_THEME=Numix:dark pavucontrol"
+        "on-click": "pavucontrol"
     }
 }

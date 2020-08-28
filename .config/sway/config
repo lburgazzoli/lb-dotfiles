@@ -4,7 +4,6 @@ set $mod Mod4
 
 bar {
     swaybar_command waybar
-    #swaybar_command $HOME/.config/sway/scripts/waybar.sh
 }
 
 include /etc/sway/config.d/*
