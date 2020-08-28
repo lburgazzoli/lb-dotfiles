@@ -1,0 +1,32 @@
+export MVND_HOME=${LB_SFW_TOOLS_HOME}/mvnd
+
+if [ -d $MVND_HOME ]; then
+    pathadd $MVND_HOME/bin
+fi
+
+function get-mvnd {
+    REPO_OWNER="mvndaemon"
+    REPO_NAME="mvnd"
+    BINARY_NAME="linux-amd64.zip"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/mvnd"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL --output /tmp/mvnd.zip \
+        && unzip -d $BINARY_PATH/_unzip /tmp/mvnd.zip \
+        && mv $BINARY_PATH/_unzip/mvnd-*/* $BINARY_PATH \
+        && rm -rf $BINARY_PATH/_unzip \
+        && rm /tmp/mvnd.zip
+
+    pathadd ${BINARY_PATH}/bin
+}
