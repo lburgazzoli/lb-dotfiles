@@ -11,6 +11,7 @@
 .factorypath
 .vscode
 .envrc
+.run/
 
 .DS_Store
 
@@ -35,4 +36,5 @@ _kamel/
 .kube/
 kamel-config.yaml
 kamel-config.yml
+kamel
 
