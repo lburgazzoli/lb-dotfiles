@@ -1,9 +1,10 @@
 set $mod Mod4
-set $term alacritty
+#set $term alacritty
 #set $term xfce4-terminal
 
 bar {
     swaybar_command waybar
+    #swaybar_command $HOME/.config/sway/scripts/waybar.sh
 }
 
 include /etc/sway/config.d/*
