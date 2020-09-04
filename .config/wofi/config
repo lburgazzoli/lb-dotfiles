@@ -1,0 +1,4 @@
+allow_images=true
+image_size=16
+lines=10
+term=xfce4-terminal
