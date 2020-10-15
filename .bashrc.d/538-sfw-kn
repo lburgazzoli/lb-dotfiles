@@ -1,0 +1,35 @@
+##########################################
+#
+# KN
+#
+##########################################
+
+export KN_HOME=${LB_SFW_TOOLS_HOME}/k8s
+
+if [ -d $KN_HOME ]; then
+    pathadd $KN_HOME/bin
+fi
+
+function get-kn {
+    REPO_OWNER="knative"
+    REPO_NAME="client"
+    BINARY_NAME="kn-linux-amd64"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/k8s/bin"
+
+   URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -v ${BINARY_PATH}/kn
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL --output ${BINARY_PATH}/kn
+    chmod u+x  ${BINARY_PATH}/kn
+
+    pathadd ${BINARY_PATH}
+}

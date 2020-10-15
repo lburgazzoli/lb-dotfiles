@@ -1,0 +1,39 @@
+##########################################
+#
+# KN
+#
+##########################################
+
+export K9S_HOME=${LB_SFW_TOOLS_HOME}/k8s
+
+if [ -d $K9S_HOME ]; then
+    pathadd $K9S_HOME/bin
+fi
+
+function get-k9s {
+    REPO_OWNER="derailed"
+    REPO_NAME="k9s"
+    BINARY_NAME="k9s_Linux_x86_64.tar.gz"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/k8s/bin"
+
+   URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -v ${BINARY_PATH}/k9s
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            k9s
+    
+    chmod u+x  ${BINARY_PATH}/k9s
+
+    pathadd ${BINARY_PATH}
+}
