@@ -1,5 +1,6 @@
 
 export OCP4_HOME=${LB_SFW_TOOLS_HOME}/ocp4
+export OCM_HOME=${LB_SFW_TOOLS_HOME}/ocm
 
 #############
 #
@@ -28,6 +29,37 @@ function get-ocp4 {
     fi
 }
 
+function get-ocm {
+    openshift-online/ocm-cli
+
+    REPO_OWNER="openshift-online"
+    REPO_NAME="ocm-cli"
+    BINARY_NAME="ocm-linux-amd64"
+    BINARY_PATH="${OCM_HOME}"
+
+    if [ $# -eq 1 ]; then
+        URL= "https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
+    else
+        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+    fi
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -rv ${BINARY_PATH}/*
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL --output ${BINARY_PATH}/ocm
+    cmod u+x ${BINARY_PATH}/ocm
+
+    pathadd $BINARY_PATH
+}
+
+
 #############
 #
 #############
@@ -35,9 +67,13 @@ function get-ocp4 {
 if [ -d ${OCP4_HOME}/4 ]; then
     pathadd ${OCP4_HOME}/4
 fi
+if [ -d ${OCM_HOME} ]; then
+    pathadd ${OCM_HOME}
+fi
 
 if hash oc 2>/dev/null; then
     source <(oc completion bash)
 fi
-
-
+if hash ocm 2>/dev/null; then
+    source <(ocm completion)
+fi

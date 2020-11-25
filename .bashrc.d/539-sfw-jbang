@@ -4,7 +4,11 @@
 #
 ##########################################
 
-if hash code 2> /dev/null; then
-    export JBANG_EDITOR=code
+if hash jbang 2> /dev/null; then
+    if hash code 2> /dev/null; then
+        export JBANG_EDITOR=code
+    fi
+
+    source <(jbang completion)
 fi
 
