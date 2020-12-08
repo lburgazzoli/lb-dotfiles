@@ -10,6 +10,10 @@ if [ -d $K3D_HOME ]; then
     pathadd $K3D_HOME/bin
 fi
 
+if hash k3d 2>/dev/null; then
+    source <(k3d completion bash)
+fi
+
 function get-k3d {
     REPO_OWNER="rancher"
     REPO_NAME="k3d"
