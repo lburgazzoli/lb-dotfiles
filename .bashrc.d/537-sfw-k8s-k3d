@@ -1,0 +1,35 @@
+##########################################
+#
+# K3D
+#
+##########################################
+
+export K3D_HOME=${LB_SFW_TOOLS_HOME}/k3d
+
+if [ -d $K3D_HOME ]; then
+    pathadd $K3D_HOME/bin
+fi
+
+function get-k3d {
+    REPO_OWNER="rancher"
+    REPO_NAME="k3d"
+    BINARY_NAME="k3d-linux-amd64"
+    BINARY_PATH="${K3D_HOME}/bin"
+
+   URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | startswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -v ${BINARY_PATH}/bin/k3d
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL --output ${BINARY_PATH}/k3d
+    chmod u+x  ${BINARY_PATH}/k3d
+
+    pathadd ${BINARY_PATH}
+}

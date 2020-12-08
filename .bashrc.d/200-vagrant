@@ -1,2 +1,0 @@
-export VAGRANT_DEFAULT_PROVIDER=virtualbox
-export VAGRANT_HOME=/opt/data/vms/vagrant
