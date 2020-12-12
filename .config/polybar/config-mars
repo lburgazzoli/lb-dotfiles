@@ -209,53 +209,6 @@ margin-bottom = 0
 
 ; ============================
 ;
-; DP-3.1
-;
-; ============================
-
-[bar/DP-3.1]
-monitor = ${env:MONITOR:}
-width = 100%
-height = 24
-radius = 0.0
-fixed-center = true
-background = ${colors.background}
-foreground = ${colors.foreground}
-
-line-size = 1
-line-color = #f00
-
-border-size = 0
-border-color = #454545
-border-bottom = 2
-border-top = 2
-
-underline-size = 2
-
-padding-left = 0
-padding-right = 0
-
-module-margin-left = 1
-module-margin-right = 1
-
-font-0 = FontAwesome:size=9;2
-font-1 = Source Code Pro:pixelsize=9;2
-font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
-font-3 = siji:pixelsize=10;1
-
-modules-left = i3 bspwm 
-modules-center = xwindow
-modules-right = battery-combined-udev date separator
-
-tray-position = right
-tray-padding = 2
-tray-background = ${colors.background}
-
-cursor-click = pointer
-cursor-scroll = ns-resize
-
-; ============================
-;
 ; DP-1-1
 ;
 ; ============================
@@ -274,8 +227,8 @@ line-color = #f00
 
 border-size = 0
 border-color = #454545
-border-bottom = 2
-border-top = 2
+border-bottom-size = 2
+border-top-size = 2
 
 underline-size = 2
 
@@ -290,7 +243,7 @@ font-1 = Source Code Pro:pixelsize=9;2
 font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = siji:pixelsize=10;1
 
-modules-left = i3 bspwm 
+modules-left = i3
 modules-center = xwindow
 modules-right = battery-combined-udev date separator
 
