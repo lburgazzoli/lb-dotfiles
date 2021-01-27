@@ -34,7 +34,7 @@ function get-ocm {
     echo "Downloading from: $URL"
 
     curl --location --silent $URL --output ${BINARY_PATH}/ocm
-    cmod u+x ${BINARY_PATH}/ocm
+    chmod u+x ${BINARY_PATH}/ocm
 
     pathadd $BINARY_PATH
 }
