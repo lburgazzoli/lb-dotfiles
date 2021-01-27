@@ -5,6 +5,8 @@
 #
 ################################################################################
 
+export K8S_HOME=${LB_SFW_TOOLS_HOME}/k8s
+
 pathadd ${LB_SFW_TOOLS_HOME}/kubernetes/bin
 pathadd ${LB_SFW_TOOLS_HOME}/k8s/bin
 pathadd ${LB_SFW_TOOLS_HOME}/minikube/bin

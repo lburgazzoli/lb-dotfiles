@@ -1,0 +1,22 @@
+##########################################
+#
+# K8S
+#
+##########################################
+
+if [ -d $K8S_HOME ]; then
+    pathadd $K8S_HOME/bin
+fi
+
+if hash kubectl 2>/dev/null; then
+    source <(kubectl completion bash)
+fi
+
+function get-kubectl {
+   curl \
+	--location "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" \
+	--output ${K8S_HOME}/bin/kubectl
+
+   chmod u+x  ${K8S_HOME}/bin/kubectl
+
+}
