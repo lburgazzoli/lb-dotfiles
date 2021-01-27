@@ -7,7 +7,7 @@ fi
 function get-kubefwd {
     REPO_OWNER="txn2"
     REPO_NAME="kubefwd"
-    BINARY_NAME="linux_amd64.tar.gz"
+    BINARY_NAME="x86_64.tar.gz"
     BINARY_PATH="${LB_SFW_TOOLS_HOME}/kubefwd"
 
     URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
