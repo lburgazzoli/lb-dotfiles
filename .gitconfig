@@ -5,8 +5,17 @@
 [core]
     autocrlf = input
     editor = vim
-    pager = diff-so-fancy | less --tabs=4 -RFX
+    pager = delta
     excludesfile = ~/.gitignore.global
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    features = side-by-side line-numbers decorations
+    whitespace-error-style = 22 reverse
+[delta "decorations"]
+    commit-decoration-style = bold yellow box ul
+    file-style = bold yellow ul
+    file-decoration-style = none
 [color]
     ui = auto
 [color "branch"]
@@ -22,11 +31,6 @@
     added = yellow
     changed = green
     untracked = cyan
-[color "diff-highlight"]
-    oldNormal = red bold
-    oldHighlight = red bold 52
-    newNormal = green bold
-    newHighlight = green bold 22
 [credential]
     helper = cache --timeout=3600
 [diff]

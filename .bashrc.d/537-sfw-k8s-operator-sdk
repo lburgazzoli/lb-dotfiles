@@ -5,7 +5,7 @@ fi
 
 function get-operator-sdk {
     if [ $# -eq 1 ]; then
-        URL="https://github.com/operator-framework/operator-sdk/releases/download/v${1}/operator-sdk-v${1}-x86_64-linux-gnu"
+        URL="https://github.com/operator-framework/operator-sdk/releases/download/v${1}/operator-sdk_linux_amd64"
         
         
         if [ ! -d ${LB_SFW_TOOLS_HOME}/k8s/bin ]; then
