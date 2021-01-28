@@ -1,0 +1,16 @@
+
+#######################
+#
+# NEXUS
+#
+#######################
+
+function nexus {
+    docker run \
+        --rm \
+        --detach \
+        --publish 8989:8081 \
+        --volume /opt/data/cache/nexus:/nexus-data:Z \
+        --name nexus \
+        sonatype/nexus3
+}

@@ -1,0 +1,45 @@
+
+#######################
+#
+# ETCD
+#
+#######################
+
+function etcd {
+    local ETCD_VERSION="v3.3"
+    local DOCKER_IMAGE="gcr.io/etcd-development/etcd:${ETCD_VERSION}"
+    local DOCKER_NAME="etcd"
+    local DOCKER_OPTS="--detach"
+    local HOST_IP="127.0.0.1"
+
+    if [ "$#" -eq 1 ]; then
+        if [[ "$1" == "-f" ]]; then
+            local state=$(docker inspect --format "{{.State.Running}}" "${DOCKER_NAME}" 2>/dev/null)
+            if [[ "$state" == "true" ]]; then
+                docker logs -f ${DOCKER_NAME}
+                exit
+            else
+                DOCKER_OPTS=""
+            fi
+        elif [[ "$1" == "stop" ]]; then
+            docker stop ${DOCKER_NAME}
+        fi
+    fi
+
+    docker run \
+        ${DOCKER_OPTS} \
+        --net host \
+        --rm \
+        --name $DOCKER_NAME \
+        --volume /usr/share/ca-certificates/:/etc/ssl/certs \
+        --publish 4001:4001 \
+        --publish 2380:2380 \
+        --publish 2379:2379 \
+        $DOCKER_IMAGE \
+            etcd \
+                -debug \
+                -name etcd \
+                -advertise-client-urls http://${HOST_IP}:2379,http://${HOST_IP}:4001 \
+                -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 \
+                -initial-advertise-peer-urls http://${HOST_IP}:2380
+}
