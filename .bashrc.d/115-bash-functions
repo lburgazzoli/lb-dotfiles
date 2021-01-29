@@ -57,41 +57,6 @@ function get-minikube {
     chmod u+x ${BINARY_PATH}/minikube
 }
 
-function get-minishift {
-    REPO_OWNER="minishift"
-    REPO_NAME="minishift"
-    BINARY_NAME="linux-amd64.tgz"
-    BINARY_PATH="${LB_SFW_TOOLS_HOME}/minishift/bin"
-
-    if [ $# -eq 1 ]; then
-        VER=${1}
-        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/minishift-${VER}-${BINARY_NAME}"
-    else
-        VER=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-            | jq --raw-output \ ".name" \
-            | sed 's/^v\(.*\)$/\1/')
-        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-            | jq --raw-output \
-                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
-    fi
-
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
-    fi
-
-    echo "Downloading from: $URL"
-
-    curl --location --silent $URL \
-        | tar xvz \
-            --directory ${BINARY_PATH} \
-            --strip-components=1 \
-            minishift-${VER}-linux-amd64/minishift
-
-    chmod u+x ${BINARY_PATH}/minishift
-}
-
 function get-rust {
     if [ ! -d $RUST_HOME ]; then
         mkdir -p $RUST_HOME
@@ -140,27 +105,3 @@ function get-stern {
 }
 
 
-function get-grv {
-    REPO_OWNER="rgburke"
-    REPO_NAME="grv"
-    BINARY_NAME="linux64"
-    BINARY_PATH="/opt/data/sfw/tools/grv"
-
-    if [ $# -eq 1 ]; then
-        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/grv_v${1}_${BINARY_NAME}"
-    else
-        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-            | jq --raw-output \
-                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
-    fi
-
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
-    fi
-
-    echo "Downloading from: $URL"
-
-    curl --location --silent $URL -o ${BINARY_PATH}/${REPO_NAME}
-}
