@@ -5,25 +5,17 @@ if [ -d $YQ_HOME ]; then
 fi
 
 function get-yq {
-    REPO_OWNER="mikefarah"
-    REPO_NAME="yq"
-    BINARY_NAME="yq_linux_amd64"
-    BINARY_PATH="${LB_SFW_TOOLS_HOME}/yq"
-
-    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
-        | jq --raw-output \
-            ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
-
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
+    URL=$(get-gh-release-url "mikefarah" "yq" "yq_linux_amd64")
+    
+    if [ ! -d ${YQ_HOME} ]; then
+        mkdir -p ${YQ_HOME}
     fi
 
     echo "Downloading from: $URL"
 
-    curl --location --silent --output $BINARY_PATH/yq $URL
-    chmod u+x $BINARY_PATH/yq
+    curl --location --silent --output ${YQ_HOME}/yq $URL
+    chmod u+x $YQ_HOME/yq
 
-    pathadd ${BINARY_PATH}
+    pathadd ${YQ_HOME}
 }
+

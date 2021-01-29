@@ -1,13 +1,3 @@
-##########################################
-#
-# K8S
-#
-##########################################
-
-if [ -d $K8S_HOME ]; then
-    pathadd $K8S_HOME/bin
-fi
-
 if hash kubectl 2>/dev/null; then
     source <(kubectl completion bash)
 fi

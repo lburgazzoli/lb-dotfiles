@@ -26,82 +26,24 @@ less() {
 # Get software
 ################################################################################
 
-function get-minikube {
-    REPO_OWNER="kubernetes"
-    REPO_NAME="minikube"
-    BINARY_NAME="minikube-linux-amd64"
-    BINARY_PATH="${LB_SFW_TOOLS_HOME}/minikube/bin"
 
-    if [ $# -eq 1 ]; then
-        URL= "https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}"
-    else
-        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+function get-gh-release-url {
+    REPO_OWNER="${1}"
+    REPO_NAME="${2}"
+    ASSET_NAME="${3}"
+    ASSET_VERSION="${4}"
+
+    if [ $# -eq 3 ]; then
+        curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
             | jq --raw-output \
-                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+                "[.assets[] | select(.name | contains(\"${ASSET_NAME}\")) | .browser_download_url] | first"
     fi
 
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
-    fi
-
-    echo "Downloading from: $URL"
-
-    curl \
-        --location \
-        --silent \
-        --output ${BINARY_PATH}/minikube \
-        $URL
-
-    chmod u+x ${BINARY_PATH}/minikube
-}
-
-function get-rust {
-    if [ ! -d $RUST_HOME ]; then
-        mkdir -p $RUST_HOME
-    fi
-
-    if [ ! -d $RUST_SRC_HOME ]; then
-        mkdir -p $RUST_SRC_HOME
-    fi
-
-    curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- \
-        --disable-sudo \
-        --disable-ldconfig \
-        --revision=$RUST_VERSION \
-        --prefix=$RUST_HOME
-
-    curl https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.gz \
-        | tar -xzf - \
-            --directory ${RUST_SRC_HOME} \
-            --strip-components=1
-}
-
-function get-stern {
-    REPO_OWNER="wercker"
-    REPO_NAME="stern"
-    BINARY_NAME="stern_linux_amd64"
-    BINARY_PATH="${LB_SFW_TOOLS_HOME}/stern"
-
-    if [ $# -eq 1 ]; then
-        URL="https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}"
-    else
-        URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+    if [ $# -eq 4 ]; then
+        curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/tags/${ASSET_VERSION} \
             | jq --raw-output \
-                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+                "[.assets[] | select(.name | contains(\"${ASSET_NAME}\")) | .browser_download_url] | first"
     fi
-
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
-    fi
-
-    echo "Downloading from: $URL"
-
-    curl --location --silent $URL -o ${BINARY_PATH}/stern
-    chmod u+x ${BINARY_PATH}/stern
 }
 
 

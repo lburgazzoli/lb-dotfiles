@@ -1,0 +1,20 @@
+
+function get-stern {
+    REPO_OWNER="wercker"
+    REPO_NAME="stern"
+    BINARY_NAME="stern_linux_amd64"
+    BINARY_PATH="${LB_SFW_TOOLS_HOME}/k8s/bin"
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output \
+                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL -o ${BINARY_PATH}/stern
+    chmod u+x ${BINARY_PATH}/stern
+}

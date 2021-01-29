@@ -75,7 +75,6 @@ ldpathadd() {
     fi
 }
 
-
 SYSPATH=${PATH}
 
 PATH=${HOME}/bin
