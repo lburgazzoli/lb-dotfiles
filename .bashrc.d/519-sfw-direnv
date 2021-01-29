@@ -16,8 +16,6 @@ function get-direnv {
 
     if [ ! -d ${BINARY_PATH} ]; then
         mkdir -p ${BINARY_PATH}
-    else
-        rm -rv ${BINARY_PATH}/*
     fi
 
     echo "Downloading from: $URL"
