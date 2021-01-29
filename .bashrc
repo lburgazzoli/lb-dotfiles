@@ -80,14 +80,10 @@ SYSPATH=${PATH}
 
 PATH=${HOME}/bin
 pathadd "${HOME}/.local/bin"
-pathadd "${LB_SFW_TOOLS_HOME}/ctop"
 pathadd "${LB_SFW_TOOLS_HOME}/sublime_text_3/"
 
 PATH=${PATH}:${SYSPATH}
 export PATH
-
-unset MANPATH
-manpathadd ${LB_SFW_TOOLS_HOME}/perf-tools/man
 
 PS1='[\u@\h \W] $ '
 
