@@ -1,0 +1,18 @@
+
+function get-oc {
+    if [ ! -d ${OCP_HOME}/bin ]; then
+        mkdir -p ${OCP_HOME}/bin
+    else
+        rm -v ${OCP_HOME}/bin/oc
+    fi
+
+    curl \
+        --location \
+        https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-client-linux.tar.gz \
+        | tar -C ${OCP_HOME}/bin -xvzf - oc
+}
+
+if hash oc 2>/dev/null; then
+    source <(oc completion bash)
+fi
+

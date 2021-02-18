@@ -1,21 +1,8 @@
 
-export OCM_HOME=${LB_SFW_TOOLS_HOME}/ocm
-
-if [ -d ${OCM_HOME} ]; then
-    pathadd ${OCM_HOME}
-fi
-
-if hash ocm 2>/dev/null; then
-    source <(ocm completion)
-fi
-
 function get-ocm {
-    openshift-online/ocm-cli
-
     REPO_OWNER="openshift-online"
     REPO_NAME="ocm-cli"
     BINARY_NAME="ocm-linux-amd64"
-    BINARY_PATH="${OCM_HOME}"
 
     if [ $# -eq 1 ]; then
         URL= "https://github.com/${REPO_OWNER}/${REPO_NAME}/releases/download/v${1}/${BINARY_NAME}-${1}.${BINARY_TYPE}"
@@ -25,18 +12,18 @@ function get-ocm {
                 ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
     fi
 
-    if [ ! -d ${BINARY_PATH} ]; then
-        mkdir -p ${BINARY_PATH}
+    if [ ! -d ${OCP_HOME}/bin ]; then
+        mkdir -p ${OCP_HOME}/bin
     else
-        rm -rv ${BINARY_PATH}/*
+        rm -v ${OCP_HOME}/bin/ocm
     fi
 
     echo "Downloading from: $URL"
 
-    curl --location --silent $URL --output ${BINARY_PATH}/ocm
-    chmod u+x ${BINARY_PATH}/ocm
-
-    pathadd $BINARY_PATH
+    curl --location --silent $URL --output ${OCP_HOME}/bin/ocm
+    chmod u+x ${OCP_HOME}/bin/ocm
 }
 
-
+if hash ocm 2>/dev/null; then
+    source <(ocm completion)
+fi

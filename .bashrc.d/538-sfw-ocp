@@ -1,33 +1,4 @@
 
-export OCP4_HOME=${LB_SFW_TOOLS_HOME}/ocp4
+export OCP_HOME=${LB_SFW_TOOLS_HOME}/ocp
 
-if [ -d ${OCP4_HOME}/4 ]; then
-    pathadd ${OCP4_HOME}/4
-fi
-
-if hash oc 2>/dev/null; then
-    source <(oc completion bash)
-fi
-
-function get-ocp4 {
-    if [ $# -eq 1 ]; then
-        BINARY_PATH="${OCP4_HOME}/${1}"
-
-        if [ ! -d ${BINARY_PATH} ]; then
-            mkdir -p ${BINARY_PATH}
-        else
-            rm -rv ${BINARY_PATH}/*
-        fi
-
-        curl \
-            --location \
-            https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${1}/openshift-client-linux-${1}.tar.gz \
-            | tar xvzf - \
-                --directory ${BINARY_PATH}
-        curl \
-            --location \
-            https://mirror.openshift.com/pub/openshift-v4/clients/ocp/${1}/openshift-install-linux-${1}.tar.gz \
-            | tar xvzf - \
-                --directory ${BINARY_PATH}
-    fi
-}
+pathadd ${OCP_HOME}/bin
