@@ -46,4 +46,3 @@ function get-gh-release-url {
     fi
 }
 
-

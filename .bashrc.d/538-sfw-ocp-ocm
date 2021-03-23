@@ -26,4 +26,12 @@ function get-ocm {
 
 if hash ocm 2>/dev/null; then
     source <(ocm completion)
+
+    function cm {
+        curl \
+            -H "Authorization: Bearer $(ocm token)" \
+            -S \
+            -s \
+            -D /dev/stderr "$@" | jq;
+    }
 fi
