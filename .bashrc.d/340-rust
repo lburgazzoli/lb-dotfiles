@@ -12,14 +12,6 @@ if [ -d ${CARGO_HOME}/bin ]; then
     if [ -f ${RUST_SYS_PATH}/etc/bash_completion.d/cargo ]; then
         source ${RUST_SYS_PATH}/etc/bash_completion.d/cargo
     fi
-
-    function cargo-install-base {
-        cargo install cargo-update
-        cargo install fd-find
-        cargo install ripgrep
-        cargo install bat
-        cargo install exa
-    }
 fi
 
 if [ -f ${CARGO_HOME}/bin/rustup ]; then
@@ -40,26 +32,4 @@ fi
 if hash rg 2>/dev/null; then
     export RIPGREP_CONFIG_PATH=~/.ripgreprc
 fi
-
-
-function get-rust {
-    if [ ! -d $RUST_HOME ]; then
-        mkdir -p $RUST_HOME
-    fi
-
-    if [ ! -d $RUST_SRC_HOME ]; then
-        mkdir -p $RUST_SRC_HOME
-    fi
-
-    curl -sSf https://static.rust-lang.org/rustup.sh | sh -s -- \
-        --disable-sudo \
-        --disable-ldconfig \
-        --revision=$RUST_VERSION \
-        --prefix=$RUST_HOME
-
-    curl https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.gz \
-        | tar -xzf - \
-            --directory ${RUST_SRC_HOME} \
-            --strip-components=1
-}
 

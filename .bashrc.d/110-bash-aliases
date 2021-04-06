@@ -24,19 +24,6 @@ alias la="ls -laF ${colorflag}"
 alias ll='ls -l'
 
 #
-# Shortcuts
-#
-alias chron='cd $LB_WORK_HOME/chronicle'
-alias rh='cd $LB_WORK_HOME/redhat'
-alias fuse='cd $LB_WORK_HOME/redhat/fuse'
-alias lb='cd $LB_WORK_HOME/lb'
-alias camel='cd $LB_WORK_HOME/apache/dev/camel'
-alias karaf='cd $LB_WORK_HOME/apache/dev/karaf'
-alias apache='cd $LB_WORK_HOME/apache'
-alias sm-bundles='cd $LB_WORK_HOME/redhat/dev/apache-servicemix-bundles'
-alias sm-specs='cd $LB_WORK_HOME/redhat/dev/apache-servicemix-specs'
-
-#
 # Gradle
 #
 alias gw='./gradlew'
@@ -58,3 +45,8 @@ fi
 
 
 alias ps-rss='ps ax -o pid,rss,command | numfmt --header --from-unit=1024 --to=iec --field 2|grep -v grep'
+
+if hash starship 2> /dev/null; then
+    eval "$(starship init bash)"
+fi
+

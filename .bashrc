@@ -24,12 +24,9 @@ export MANPAGER="less -X"
 export LB_OS_NAME=$(uname -s | tr '[:upper:]' '[:lower:]')
 export LB_WORK_HOME=${HOME}/work
 
-export LB_SFW_HOME=/opt/data/sfw
+export LB_SFW_HOME=${HOME}/.local/opt/sfw
 export LB_SFW_LANG_HOME=${LB_SFW_HOME}/lang
 export LB_SFW_TOOLS_HOME=${LB_SFW_HOME}/tools
-export LB_DATA_HOME=/opt/data
-export LB_DATA_CACHE_HOME=${LB_DATA_HOME}/cache
-export LB_DATA_VMS_HOME=${LB_DATA_HOME}/vms
 
 ################################################################################
 #
@@ -110,3 +107,5 @@ do
     fi
 done
 
+
+source "/home/luca/.local/opt/sfw/lang/rust/cargo/env"

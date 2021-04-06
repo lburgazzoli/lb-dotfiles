@@ -14,25 +14,19 @@ else
     if [ -d ${JAVA_HOME} ]; then
         pathadd ${JAVA_HOME}/bin
     fi
-
 fi
 
-if [ -d ${LB_SFW_LANG_HOME}/java/8-graal ]; then
-    export GRAALVM_HOME=${LB_SFW_LANG_HOME}/java/8-graal
-fi
 
 if [ ! -e /tmp/java-${LOGNAME} ]; then
     mkdir /tmp/java-${LOGNAME}
 fi
-
-
 
 ####################################################################
 # Maven
 ####################################################################
 
 export M2_OPTS=$MAVEN_OPTS
-export M2_REPO=${LB_DATA_CACHE_HOME}/maven-repo
+export M2_REPO=$HOME/.m2/repository
 
 if [ ! -e /tmp/artifacts ]; then
     mkdir /tmp/artifacts
@@ -100,15 +94,11 @@ function mdeps-list {
 # JAVA_OPTS
 ####################################################################
 
-GRAPE_OPTS="-Dgrape.root=${LB_DATA_CACHE_HOME}/groovy-grape-repo -Dgrape.config=${HOME}/.groovy/grapeConfig.xml"
-JAVA_OPTS="${GRAPE_OPTS}"
 JAVA_DEBUG="-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=n"
 JAVA_DEBUG_SUSPEND="-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=5005,suspend=y"
 
 if [ -c /dev/urandom ]; then
-    JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom"
+    export JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom"
 fi
 
-export JAVA_OPTS
-export MVN_PROFILE=lb
 

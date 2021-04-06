@@ -1,0 +1,34 @@
+# Inserts a blank line between shell prompts
+add_newline = false
+
+format = """
+$username\
+$hostname \
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status
+$character"""
+
+[character]
+success_symbol  = "[➜](green)"
+error_symbol    = "[➜](red)"
+
+[username]
+style_user  = "#D64937"
+style_root  = "red"
+format      = "[$user]($style)"
+disabled    = false
+show_always = true
+
+[hostname]
+ssh_only    = false
+format      = "[@$hostname](#D64937)"
+disabled    = false
+
+[directory]
+style               = "green"
+truncate_to_repo    = false
+truncation_length   = -1
+
