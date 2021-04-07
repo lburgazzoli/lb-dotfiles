@@ -72,13 +72,8 @@ ldpathadd() {
     fi
 }
 
-SYSPATH=${PATH}
-
-PATH=${HOME}/bin
 pathadd "${HOME}/.local/bin"
-
-PATH=${PATH}:${SYSPATH}
-export PATH
+pathadd "${HOME}/bin"
 
 PS1='[\u@\h \W] $ '
 

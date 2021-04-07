@@ -33,3 +33,7 @@ if hash rg 2>/dev/null; then
     export RIPGREP_CONFIG_PATH=~/.ripgreprc
 fi
 
+if hash starship 2> /dev/null; then
+    eval "$(starship init bash)"
+fi
+

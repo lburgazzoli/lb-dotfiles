@@ -46,7 +46,3 @@ fi
 
 alias ps-rss='ps ax -o pid,rss,command | numfmt --header --from-unit=1024 --to=iec --field 2|grep -v grep'
 
-if hash starship 2> /dev/null; then
-    eval "$(starship init bash)"
-fi
-
