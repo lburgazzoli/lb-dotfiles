@@ -62,6 +62,7 @@
     undo = reset HEAD~1 --mixed
     amend = commit -a --amend
     fat = fetch --all --tags
+    fap = fetch --all --prune
 
     current-branch = !git rev-parse --abbrev-ref HEAD
     tracking-branch = "!f() { git for-each-ref --format=\"%(color:yellow)%(refname:short)%(color:reset) <--> %(color:blue)%(${1-upstream}:short)%(color:reset)\" $(git symbolic-ref -q HEAD); }; f"
