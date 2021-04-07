@@ -76,7 +76,6 @@ SYSPATH=${PATH}
 
 PATH=${HOME}/bin
 pathadd "${HOME}/.local/bin"
-pathadd "${LB_SFW_TOOLS_HOME}/sublime_text_3/"
 
 PATH=${PATH}:${SYSPATH}
 export PATH
@@ -107,5 +106,3 @@ do
     fi
 done
 
-
-source "/home/luca/.local/opt/sfw/lang/rust/cargo/env"

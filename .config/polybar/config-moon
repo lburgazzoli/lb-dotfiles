@@ -120,80 +120,24 @@ time-alt = %H:%M:%S
 format-prefix-foreground = ${colors.foreground-alt}
 label =  %date% %time%
 
-[module/battery-combined-udev]
-type = custom/script
-exec = $HOME/.config/polybar/battery-combined-udev.sh
-tail = true
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
 
-; [module/battery0]
-; type = internal/battery
-; battery = BAT0
-; adapter = AC
-; full-at = 98
+format-charging = <ramp-capacity> <label-charging>
+format-discharging = <ramp-capacity> <label-discharging>
 
-; format-charging = <ramp-capacity> <label-charging>
-; format-discharging = <ramp-capacity> <label-discharging>
+label-full = " "
+,format-full-prefix = " "
+;format-full-prefix-foreground = ${colors.foreground-alt}
 
-; format-full-prefix = " "
-; format-full-prefix-foreground = ${colors.foreground-alt}
-
-; ramp-capacity-0 = 
-; ramp-capacity-1 = 
-; ramp-capacity-2 = 
-; ramp-capacity-3 = 
-; ramp-capacity-4 = 
-
-; [module/battery1]
-; type = internal/battery
-; battery = BAT1
-; adapter = AC
-; full-at = 98
-
-; format-charging = <ramp-capacity> <label-charging>
-; format-discharging = <ramp-capacity> <label-discharging>
-; format-full-prefix = " "
-; format-full-prefix-foreground = ${colors.foreground-alt}
-
-; ramp-capacity-0 = 
-; ramp-capacity-1 = 
-; ramp-capacity-2 = 
-; ramp-capacity-3 = 
-; ramp-capacity-4 = 
-
-[module/cpu]
-type = internal/cpu
-interval = 1.5
-
-format = <label> <ramp-coreload>
-
-label = CPU
-label-font = 3
-label-foreground = #99
-
-ramp-coreload-0 = ▁
-ramp-coreload-0-font = 2
-ramp-coreload-0-foreground = #aaff77
-ramp-coreload-1 = ▂
-ramp-coreload-1-font = 2
-ramp-coreload-1-foreground = #aaff77
-ramp-coreload-2 = ▃
-ramp-coreload-2-font = 2
-ramp-coreload-2-foreground = #aaff77
-ramp-coreload-3 = ▄
-ramp-coreload-3-font = 2
-ramp-coreload-3-foreground = #aaff77
-ramp-coreload-4 = ▅
-ramp-coreload-4-font = 2
-ramp-coreload-4-foreground = #fba922
-ramp-coreload-5 = ▆
-ramp-coreload-5-font = 2
-ramp-coreload-5-foreground = #fba922
-ramp-coreload-6 = ▇
-ramp-coreload-6-font = 2
-ramp-coreload-6-foreground = #ff5555
-ramp-coreload-7 = █
-ramp-coreload-7-font = 2
-ramp-coreload-7-foreground = #ff5555
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
 
 [settings]
 screenchange-reload = true
@@ -209,14 +153,12 @@ margin-bottom = 0
 
 ; ============================
 ;
-; eDP-1
-;
 ; ============================
 
 [bar/eDP-1]
 monitor = ${env:MONITOR:}
 width = 100%
-height = 24
+height = 22
 radius = 0.0
 fixed-center = true
 background = ${colors.background}
@@ -238,14 +180,14 @@ padding-right = 0
 module-margin-left = 1
 module-margin-right = 1
 
-font-0 = FontAwesome:size=9;2
-font-1 = Source Code Pro:pixelsize=9;2
+font-0 = FontAwesome:size=8;2
+font-1 = Source Code Pro:pixelsize=8;2
 font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center = xwindow
-modules-right = battery-combined-udev date separator
+modules-right = battery date separator
 
 tray-position = right
 tray-padding = 2
@@ -256,14 +198,12 @@ cursor-scroll = ns-resize
 
 ; ============================
 ;
-; DP-2
-;
 ; ============================
 
-[bar/DP-2]
+[bar/DP-3-3]
 monitor = ${env:MONITOR:}
 width = 100%
-height = 24
+height = 22
 radius = 0.0
 fixed-center = true
 background = ${colors.background}
@@ -285,62 +225,20 @@ padding-right = 0
 module-margin-left = 1
 module-margin-right = 1
 
-font-0 = FontAwesome:size=9;2
-font-1 = Source Code Pro:pixelsize=9;2
+font-0 = FontAwesome:size=8;2
+font-1 = Source Code Pro:pixelsize=8;2
 font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
 font-3 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center = xwindow
-modules-right = 
+modules-right = battery date separator
+
+tray-position = right
+tray-padding = 2
+tray-background = ${colors.background}
 
 cursor-click = pointer
 cursor-scroll = ns-resize
 
-tray-position = none
-
-; ============================
-;
-; DP-3-3
-;
-; ============================
-
-[bar/DP-3-3]
-monitor = ${env:MONITOR:}
-width = 100%
-height = 24
-radius = 0.0
-fixed-center = true
-background = ${colors.background}
-foreground = ${colors.foreground}
-
-line-size = 1
-line-color = #f00
-
-border-size = 0
-border-color = #454545
-border-bottom = 2
-border-top = 2
-
-underline-size = 2
-
-padding-left = 0
-padding-right = 0
-
-module-margin-left = 1
-module-margin-right = 1
-
-font-0 = FontAwesome:size=9;2
-font-1 = Source Code Pro:pixelsize=9;2
-font-2 = unifont:fontformat=truetype:size=8:antialias=false;0
-font-3 = siji:pixelsize=10;1
-
-modules-left = i3
-modules-center = xwindow
-modules-right = 
-
-cursor-click = pointer
-cursor-scroll = ns-resize
-
-tray-position = none
 

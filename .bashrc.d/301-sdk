@@ -4,3 +4,8 @@ export SDKMAN_DIR=${SDKMAN_HOME}
 if [ -s ${SDKMAN_DIR}/bin/sdkman-init.sh ]; then
     source ${SDKMAN_DIR}/bin/sdkman-init.sh
 fi
+
+if hash sdk 2>/dev/null; then
+    source <(sdk completion bash)
+fi
+

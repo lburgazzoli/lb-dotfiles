@@ -47,3 +47,5 @@ function get-hub {
 
     pathadd ${BINARY_PATH}
 }
+
+export HUB_PROTOCOL=ssh
