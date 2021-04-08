@@ -7,14 +7,10 @@
 export KIND_HOME=${LB_SFW_TOOLS_HOME}/kind
 
 if [ -d $KIND_HOME ]; then
-    pathadd $KIND_HOME/bin
-    manpathadd $KIND_HOME/share/man
+    pathadd $KIND_HOME
 fi
-
-if [ -e ${LB_SFW_TOOLS_HOME}/kind/bin/kind ]; then
-    alias git='kind'
-elif [ -e /usr/local/bin/kind ]; then
-    alias git='kind'
+if hash kind 2>/dev/null; then
+  source <(kind completion bash)
 fi
 
 function get-kind {

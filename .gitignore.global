@@ -12,6 +12,7 @@
 .vscode
 .envrc
 .run/
+.sdkmanrc
 
 .DS_Store
 
