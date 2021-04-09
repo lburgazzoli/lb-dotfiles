@@ -12,8 +12,8 @@ $git_status
 $character"""
 
 [character]
-success_symbol  = "[➜](green)"
-error_symbol    = "[➜](red)"
+success_symbol  = "[➜](#A3BE8C)"
+error_symbol    = "[➜](#D64937)"
 
 [username]
 style_user  = "#D64937"
@@ -28,7 +28,7 @@ format      = "[@$hostname](#D64937)"
 disabled    = false
 
 [directory]
-style               = "green"
+style               = "#A3BE8C"
 truncate_to_repo    = false
 truncation_length   = -1
 
