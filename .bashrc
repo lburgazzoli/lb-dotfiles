@@ -84,6 +84,7 @@ PS1='[\u@\h \W] $ '
 for F in ${HOME}/.bashrc.d/*;
 do
     if [ -f ${F} ]; then
+        echo "${F}"
         . "${F}"
     fi
 done

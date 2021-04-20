@@ -1,0 +1,33 @@
+export LOCALIZER_HOME=${LB_SFW_TOOLS_HOME}/localizer
+export LOCALIZER_ROOT=$LOCALIZER_HOME
+
+if [ -d $LOCALIZER_ROOT ]; then
+    pathadd $LOCALIZER_ROOT/bin
+fi
+
+function get-localizer {
+    REPO_OWNER="getoutreach"
+    REPO_NAME="localizer"
+    BINARY_NAME="_linux_amd64.tar.gz"
+    BINARY_PATH="${LOCALIZER_HOME}/bin"
+
+   URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${BINARY_PATH} ]; then
+        mkdir -p ${BINARY_PATH}
+    else
+        rm -v ${BINARY_PATH}/kn
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL         | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            localizer
+
+
+    chmod u+x  ${BINARY_PATH}/localizer
+    pathadd ${BINARY_PATH}
+}
