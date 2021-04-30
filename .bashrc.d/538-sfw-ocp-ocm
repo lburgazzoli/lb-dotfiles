@@ -29,7 +29,7 @@ if hash ocm 2>/dev/null; then
 
     function cm {
         curl \
-            -H "Authorization: Bearer $(ocm token)" \
+            --oauth2-bearer $(ocm token) \
             -S \
             -s \
             -D /dev/stderr "$@" | jq;
