@@ -307,6 +307,7 @@ bindsym $mod+b border toggle
 for_window [class="^.*"] border normal
 for_window [class="Firefox"] border none
 for_window [class="Chromium-browser"] border none
+for_window [class="Chromium-freeworld"] border none
 
 for_window [class="albert"] border pixel 1
 for_window [class="Pavucontrol"] floating enable
