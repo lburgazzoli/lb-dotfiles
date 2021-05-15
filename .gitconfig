@@ -39,10 +39,10 @@
     protocol = ssh    
 [alias]
     list-gone = !git pull --prune 2>&1 > /dev/null && git branch -vv | grep gone
-    list-merged-branches = "!f() { git branch --merged ${1-master} | grep -v \" ${1-master}$\"; }; f"
+    list-merged-branches = "!f() { git branch --merged ${1-main} | grep -v \" ${1-main}$\"; }; f"
     list-files = !git show --pretty="format:" --name-status
     list-deleted = !git show --pretty="format:" --name-status --diff-filter=D
-    list-mine = !"git log --author=$(git config user.name) --pretty=format:'%C(green)%h%x09%C(cyan)%ad%x09%C(reset)%s' --date=format:'%Y-%m-%d %H:%M:%S'"
+    list-mine = !"git log --author=\"$(git config user.name)\" --pretty=format:'%C(green)%h%x09%C(cyan)%ad%x09%C(reset)%s' --date=format:'%Y-%m-%d %H:%M:%S'"
     last = log --date=relative --name-status -1
 
     ls = log --graph --pretty=format:'%<(10)%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)%an%Creset' --abbrev-commit --date=relative --name-status
@@ -51,12 +51,12 @@
     lcd = "!f() { git log --pretty=format:'%<(10)%Cred%h%Creset | %Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=short ${1-origin}..${2-HEAD}; }; f"
     lcr = log --pretty=format:'%<(10)%Cred%h%Creset | %<(16)%Cgreen%ad%Creset | %<(20)%C(bold blue)%an%Creset | %s' --abbrev-commit --date=relative
     
-    diff-origin = "!f() { git diff --stat --color origin/${1-master}; }; f"
-    diff-upstream = "!f() { git diff --stat --color upstream/${1-master}; }; f"
+    diff-origin = "!f() { git diff --stat --color origin/${1-main}; }; f"
+    diff-upstream = "!f() { git diff --stat --color upstream/${1-main}; }; f"
     diff-github = !git diff --stat --color github/master
-    diverged = "!f() { git merge-base ${1-master} HEAD; }; f"
-    rebase-diverged = "!f() { git rebase -i $(git merge-base ${1-master} HEAD); }; f"
-    rebase-upstream = "!f() { git fetch --all && git pull && git rebase upstream/${1-master}; }; f"
+    diverged = "!f() { git merge-base ${1-main} HEAD; }; f"
+    rebase-diverged = "!f() { git rebase -i $(git merge-base ${1-main} HEAD); }; f"
+    rebase-upstream = "!f() { git fetch --all && git pull && git rebase upstream/${1-main}; }; f"
     head-set-origin = !git remote set-head origin -a
     cm = !git add -A && git commit -m
     undo = reset HEAD~1 --mixed
@@ -123,3 +123,5 @@
 
 [pull]
 	ff = only
+[init]
+	defaultBranch = main
