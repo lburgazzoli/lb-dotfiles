@@ -1,0 +1,36 @@
+
+export RHOAS_HOME=${LB_SFW_TOOLS_HOME}/rhoas
+
+if [ -d $RHOAS_HOME/bin ]; then
+    pathadd $RHOAS_HOME/bin
+fi
+
+function get-rhoas-cli {
+    REPO_OWNER="redhat-developer"
+    REPO_NAME="app-services-cli"
+    BINARY_NAME="linux_amd64.tar.gz"    
+
+    URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+        | jq --raw-output \
+            ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
+
+    if [ ! -d ${RHOAS_HOME}/bin ]; then
+        mkdir -p ${RHOAS_HOME}/bin
+    else
+        rm -v ${RHOAS_HOME}/bin/rhoas
+    fi
+
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --strip-components=1 \
+            --directory ${RHOAS_HOME}
+
+    chmod u+x ${RHOAS_HOME}/bin/rhoas
+}
+
+if hash rhoas 2>/dev/null; then
+    source <(rhoas completion bash)
+fi
+
