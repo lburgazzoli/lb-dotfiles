@@ -335,7 +335,7 @@ exec_always --no-startup-id blueman-applet
 exec_always --no-startup-id compton 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh 
 exec_always --no-startup-id /usr/bin/volumeicon
-exec --no-startup-id xfce4-clipman
+exec_always --no-startup-id xfce4-clipman
 exec --no-startup-id nm-applet
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id dunst -config $HOME/.config/dunst/dunstrc
