@@ -34,4 +34,13 @@ if hash ocm 2>/dev/null; then
             -s \
             -D /dev/stderr "$@" | jq;
     }
+
+    function cmi {
+        curl \
+            --insecure \
+            --oauth2-bearer $(ocm token) \
+            -S \
+            -s \
+            -D /dev/stderr "$@" | jq;
+    }
 fi
