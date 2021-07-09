@@ -310,7 +310,7 @@ for_window [class="Chromium-browser"] border none
 for_window [class="Chromium-freeworld"] border none
 
 for_window [class="albert"] border pixel 1
-for_window [class="Pavucontrol"] floating enable
+#for_window [class="Pavucontrol"] floating enable
 for_window [class="albert"] floating enable
 for_window [class="Thunar"] floating enable
 for_window [class="Arandr"] floating enable
@@ -333,8 +333,8 @@ for_window [class="JetBrains Toolbo"] floating enable
 exec_always --no-startup-id feh --bg-fill $HOME/.config/i3/w.png
 exec_always --no-startup-id blueman-applet
 exec_always --no-startup-id compton 
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh 
-exec_always --no-startup-id /usr/bin/volumeicon
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh  -d hw:0
+exec_always --no-startup-id /usr/bin/volumeicon -d hw:0
 exec_always --no-startup-id xfce4-clipman
 exec --no-startup-id nm-applet
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon

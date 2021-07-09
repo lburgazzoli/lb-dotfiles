@@ -12,3 +12,4 @@ if hash jbang 2> /dev/null; then
     source <(jbang completion)
 fi
 
+pathadd $HOME/.jbang/bin
