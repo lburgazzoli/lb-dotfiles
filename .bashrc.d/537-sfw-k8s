@@ -7,7 +7,6 @@
 export K8S_HOME=${LB_SFW_TOOLS_HOME}/k8s
 
 pathadd ${LB_SFW_TOOLS_HOME}/k8s/bin
-pathadd ${LB_SFW_TOOLS_HOME}/stern
 
 if hash kubectl 2>/dev/null; then
     source <(kubectl completion bash)
@@ -16,9 +15,6 @@ if hash kubectl 2>/dev/null; then
     complete -o default -F __start_kubectl k
 fi
 
-if hash stern 2>/dev/null; then
-    source <(stern --completion bash)
-fi
 
 function watch-pods {
     watch -c -d -n 1 "kubectl get pods --field-selector=status.phase!=Succeeded $@"

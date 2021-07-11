@@ -1,13 +1,13 @@
 
 function get-stern {
-    REPO_OWNER="wercker"
+    REPO_OWNER="stern"
     REPO_NAME="stern"
-    BINARY_NAME="stern_linux_amd64"
+    BINARY_NAME="_linux_amd64.tar.gz"
     BINARY_PATH="${LB_SFW_TOOLS_HOME}/k8s/bin"
 
     URL=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
             | jq --raw-output \
-                ".assets[] | select(.name == \"${BINARY_NAME}\") | .browser_download_url")
+                ".assets[] | select(.name | endswith(\"${BINARY_NAME}\")) | .browser_download_url")
 
     if [ ! -d ${BINARY_PATH} ]; then
         mkdir -p ${BINARY_PATH}
@@ -15,6 +15,13 @@ function get-stern {
 
     echo "Downloading from: $URL"
 
-    curl --location --silent $URL -o ${BINARY_PATH}/stern
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${BINARY_PATH} \
+            --strip-components=1
     chmod u+x ${BINARY_PATH}/stern
 }
+
+if hash stern 2>/dev/null; then
+    source <(stern --completion=bash)
+fi
