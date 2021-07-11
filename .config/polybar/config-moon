@@ -146,11 +146,11 @@ tail = true
 #format-underline = ${colors.red}
 #label-padding = 2
 label-foreground = ${colors.foreground}
-exec = $HOME/.config/polybar/pactl.sh --icons-volume " , " --icon-muted " " listen
+exec = $HOME/.config/polybar/volctl.sh listen
 click-right = exec pavucontrol &
-click-left = $HOME/.config/polybar/pactl.sh togmute
-scroll-up = $HOME/.config/polybar/pactl.sh --volume-max 130 up
-scroll-down = $HOME/.config/polybar/pactl.sh --volume-max 130 down
+click-left = $HOME/.config/polybar/volctl.sh togmute
+scroll-up = $HOME/.config/polybar/volctl.sh --volume-max 130 up
+scroll-down = $HOME/.config/polybar/volctl.sh --volume-max 130 down
 
 [settings]
 screenchange-reload = true
