@@ -165,6 +165,10 @@ bindsym $mod+Ctrl+Right workspace next
 bindsym XF86MonBrightnessUp exec light -A 5;
 bindsym XF86MonBrightnessDown exec light -U 5;
 
+bindsym XF86AudioRaiseVolume exec $HOME/.config/polybar/pactl.sh --volume-max 130 up;
+bindsym XF86AudioLowerVolume exec $HOME/.config/polybar/pactl.sh --volume-max 130 down;
+bindsym XF86AudioMute exec $HOME/.config/polybar/pactl.sh togmute;
+
 # reload the configuration file
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
@@ -333,9 +337,8 @@ for_window [class="JetBrains Toolbo"] floating enable
 exec_always --no-startup-id feh --bg-fill $HOME/.config/i3/w.png
 exec_always --no-startup-id blueman-applet
 exec_always --no-startup-id compton 
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh  -d hw:0
-exec_always --no-startup-id /usr/bin/volumeicon -d hw:0
-exec_always --no-startup-id xfce4-clipman
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
+exec --no-startup-id xfce4-clipman
 exec --no-startup-id nm-applet
 exec --no-startup-id /usr/lib/gnome-settings-daemon/gnome-settings-daemon
 exec --no-startup-id dunst -config $HOME/.config/dunst/dunstrc

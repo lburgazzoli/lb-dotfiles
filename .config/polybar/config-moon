@@ -36,6 +36,7 @@ red = #d64937
 [module/separator]
 type = custom/text
 content = "|"
+content-foreground = ${colors.foreground}
 
 [module/xwindow]
 type = internal/xwindow
@@ -139,6 +140,18 @@ ramp-capacity-2 = 
 ramp-capacity-3 = 
 ramp-capacity-4 = 
 
+[module/volctl]
+type = custom/script
+tail = true
+#format-underline = ${colors.red}
+#label-padding = 2
+label-foreground = ${colors.foreground}
+exec = $HOME/.config/polybar/pactl.sh --icons-volume " , " --icon-muted " " listen
+click-right = exec pavucontrol &
+click-left = $HOME/.config/polybar/pactl.sh togmute
+scroll-up = $HOME/.config/polybar/pactl.sh --volume-max 130 up
+scroll-down = $HOME/.config/polybar/pactl.sh --volume-max 130 down
+
 [settings]
 screenchange-reload = true
 ;compositing-background = xor
@@ -187,7 +200,7 @@ font-3 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center = xwindow
-modules-right = battery date separator
+modules-right = volctl battery date separator
 
 tray-position = right
 tray-padding = 2
@@ -232,7 +245,7 @@ font-3 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center = xwindow
-modules-right = battery date separator
+modules-right = volctl battery date separator
 
 tray-position = right
 tray-padding = 2
@@ -278,7 +291,7 @@ font-3 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center = xwindow
-modules-right = battery date separator
+modules-right = volctl separator date separator
 
 tray-position = right
 tray-padding = 2
