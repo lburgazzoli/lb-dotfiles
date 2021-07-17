@@ -18,7 +18,7 @@ function get-localizer {
     if [ ! -d ${BINARY_PATH} ]; then
         mkdir -p ${BINARY_PATH}
     else
-        rm -v ${BINARY_PATH}/kn
+        rm -v ${BINARY_PATH}/localizer
     fi
 
     echo "Downloading from: $URL"
