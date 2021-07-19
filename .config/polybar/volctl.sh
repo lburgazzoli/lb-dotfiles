@@ -62,6 +62,7 @@ function getNickname() {
 
     SINK_NICKNAMES["alsa_output.usb-Lenovo_ThinkPad_Thunderbolt_3_Dock_USB_Audio_000000000000-00.pro-output-0"]="  HP"
     SINK_NICKNAMES["alsa_output.usb-Lenovo_ThinkPad_Thunderbolt_3_Dock_USB_Audio_000000000000-00.analog-stereo"]="  HP"    
+    SINK_NICKNAMES["alsa_output.pci-0000_00_1f.3-platform-skl_hda_dsp_generic.HiFi___ucm0001.hw_sofhdadsp__sink"]="  HP"
     SINK_NICKNAMES_PROP="device.description"
 
     if [ -n "$sinkName" ] && [ -n "$portName" ] && [ -n "${SINK_NICKNAMES[$sinkName/$portName]}" ]; then
