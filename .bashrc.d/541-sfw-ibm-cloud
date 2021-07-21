@@ -1,0 +1,32 @@
+
+export IBM_HOME=${LB_SFW_TOOLS_HOME}/ibm
+pathadd ${IBM_HOME}/bin
+
+function get-ibm-cloud-cli {
+    REPO_OWNER="IBM-Cloud"
+    REPO_NAME="ibm-cloud-cli-release"
+
+    if [ $# -eq 1 ]; then
+        VERSION= "${1}"
+    else
+        VERSION=$(curl -s https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest \
+            | jq --raw-output ".name" | sed s/v//g)
+    fi
+
+    if [ ! -d ${IBM_HOME}/bin ]; then
+        mkdir -p ${IBM_HOME}/bin
+    else
+        rm -v ${IBM_HOME}/bin/ibmcloud
+    fi
+
+    URL="https://download.clis.cloud.ibm.com/ibm-cloud-cli/${VERSION}/binaries/IBM_Cloud_CLI_${VERSION}_linux_amd64.tgz"
+    echo "Downloading from: $URL"
+
+    curl --location --silent $URL \
+        | tar xvzf - \
+            --directory ${IBM_HOME}/bin \
+            --strip-components=1 \
+            IBM_Cloud_CLI/ibmcloud
+
+    chmod u+x ${IBM_HOME}/bin/ibmcloud
+}
