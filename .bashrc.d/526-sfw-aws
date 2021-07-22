@@ -1,6 +1,6 @@
 export AWS_HOME=${LB_SFW_TOOLS_HOME}/aws
 
-if [ -d $AWS_HOME/bin ]; then
-    pathadd $AWS_HOME/bin
+if [ -d $AWS_HOME/v2/current/bin ]; then
+    pathadd $AWS_HOME/v2/current/bin
 fi
 
